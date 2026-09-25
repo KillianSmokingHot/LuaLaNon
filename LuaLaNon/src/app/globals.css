@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-dark: #BE1A1A;
+  --color-bright: #D0311E;
+  --color-gold: #F7D87F;
+  --color-cream: #F8EBAB;
+  --color-cream-light: #FDF6DC;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body), "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--color-cream-light);
+  color: #2a0a0a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Display font for headings — Playfair Display for luxury-serif feel */
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: -0.015em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+/* ========================================================================
+   GRADIENT TEXT
+   ======================================================================== */
+.text-gradient-red {
+  background: linear-gradient(135deg, #BE1A1A 0%, #D0311E 60%, #F7D87F 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #F7D87F 0%, #D0311E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-shimmer {
+  background: linear-gradient(
+    90deg,
+    #BE1A1A 0%,
+    #D0311E 25%,
+    #F7D87F 50%,
+    #D0311E 75%,
+    #BE1A1A 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
+}
+
+/* ========================================================================
+   OUTLINE TEXT (stroke only, no fill)
+   ======================================================================== */
+.text-outline-red {
+  -webkit-text-stroke: 1.5px #BE1A1A;
+  color: transparent;
+  text-stroke: 1.5px #BE1A1A;
+}
+
+.text-outline-red-thick {
+  -webkit-text-stroke: 2px #BE1A1A;
+  color: transparent;
+  text-stroke: 2px #BE1A1A;
+}
+
+.text-outline-gold {
+  -webkit-text-stroke: 1.5px #F7D87F;
+  color: transparent;
+  text-stroke: 1.5px #F7D87F;
+}
+
+.text-outline-white {
+  -webkit-text-stroke: 1.5px #FFFFFF;
+  color: transparent;
+  text-stroke: 1.5px #FFFFFF;
+}
+
+/* ========================================================================
+   SILK / DOT TEXTURES
+   ======================================================================== */
+.silk-dot-cream {
+  background-color: var(--color-cream);
+  background-image: radial-gradient(circle, rgba(190, 26, 26, 0.35) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.silk-dot-white {
+  background-color: #FFFFFF;
+  background-image: radial-gradient(circle, rgba(190, 26, 26, 0.18) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+
+.silk-dot-red {
+  background-color: var(--color-dark);
+  background-image: radial-gradient(circle, rgba(247, 216, 127, 0.35) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+
+.silk-dot-red-dense {
+  background-color: var(--color-dark);
+  background-image: radial-gradient(circle, rgba(247, 216, 127, 0.5) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+/* Subtle wave overlay used in hero / decorative corners */
+.silk-wave::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' fill='none'%3E%3Cpath d='M0,400 Q300,200 600,400 T1200,400' stroke='%23BE1A1A' stroke-width='1.5' fill='none' opacity='0.07'/%3E%3Cpath d='M0,500 Q300,300 600,500 T1200,500' stroke='%23D0311E' stroke-width='1.5' fill='none' opacity='0.05'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+/* ========================================================================
+   ANIMATIONS — Marquee, Pulse, Glow
+   ======================================================================== */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.glow-red {
+  box-shadow:
+    0 0 40px rgba(190, 26, 26, 0.4),
+    0 0 80px rgba(190, 26, 26, 0.2);
+}
+
+.glow-gold {
+  box-shadow:
+    0 0 30px rgba(247, 216, 127, 0.3),
+    0 0 60px rgba(247, 216, 127, 0.15);
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: inherit;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* ========================================================================
+   BUTTONS
+   ======================================================================== */
+.btn-gradient-red {
+  background: linear-gradient(135deg, #BE1A1A 0%, #D0311E 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 1rem 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 8px 24px rgba(190, 26, 26, 0.25);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-red:hover {
+  background: linear-gradient(135deg, #D0311E 0%, #BE1A1A 100%);
+  box-shadow: 0 12px 32px rgba(190, 26, 26, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-gradient-gold {
+  background: linear-gradient(135deg, #F7D87F 0%, #F8EBAB 100%);
+  color: #BE1A1A;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.75rem 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 18px rgba(247, 216, 127, 0.35);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-gold:hover {
+  background: linear-gradient(135deg, #F8EBAB 0%, #F7D87F 100%);
+  box-shadow: 0 10px 26px rgba(247, 216, 127, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ========================================================================
+   PROCESS TIMELINE — Dashed connectors
+   ======================================================================== */
+.process-connector {
+  position: relative;
+}
+
+.process-connector::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -50%;
+  width: 100%;
+  height: 0;
+  border-top: 2px dashed #BE1A1A;
+  transform: translateY(-50%);
+}
+
+.process-connector:last-child::after {
+  display: none;
+}
+
+/* ========================================================================
+   WATERMARK NUMBERS — Big faded numbers behind content
+   ======================================================================== */
+.watermark-number {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(8rem, 16vw, 18rem);
+  line-height: 1;
+  color: #BE1A1A;
+  opacity: 0.06;
+  pointer-events: none;
+  user-select: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+/* ========================================================================
+   SCROLLBAR
+   ======================================================================== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-cream); }
+::-webkit-scrollbar-thumb { background: var(--color-dark); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-bright); }
+
+/* ========================================================================
+   SECTION SCROLL OFFSET — Avoid being hidden behind sticky header
+   ======================================================================== */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* ========================================================================
+   HORIZONTAL CAROUSEL — Snap scrolling
+   ======================================================================== */
+.snap-carousel {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.snap-carousel > * {
+  scroll-snap-align: center;
+}
+
+.snap-carousel::-webkit-scrollbar {
+  display: none;
+}

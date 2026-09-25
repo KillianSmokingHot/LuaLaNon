@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LỤA LÀ NÓN — Tạo dấu ấn theo cách riêng</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN for quick setup) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deepRed: '#BE181A',
+                        vermilion: '#CF2F18',
+                        lightGold: '#F6D882',
+                        paleCream: '#F9EBAA',
+                    },
+                    fontFamily: {
+                        serif: ['"DM Serif Display"', 'serif'],
+                        sans: ['Manrope', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'hero-pattern': 'url("data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23be181a\' fill-opacity=\'0.05\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E")',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Typography Effects & Micro Interactions */
+        body { background-color: #FFFFFF; color: #191919; overflow-x: hidden; }
+        ::selection { background:#BE181A; color:#FFFFFF; }
+        .display-shadow { text-shadow: 5px 5px 0 rgba(246,216,130,.7); }
+        .pattern-dots { background-image: radial-gradient(#BE181A 1.2px, transparent 1.2px); background-size: 16px 16px; }
+        .pattern-soft { background-image: radial-gradient(rgba(246,216,130,.55) 1.2px, transparent 1.2px); background-size: 18px 18px; }
+        .image-frame { position:relative; overflow:hidden; background:#F9EBAA; }
+        .image-frame:before { content:''; position:absolute; inset:10px; border:1px solid rgba(190,24,26,.28); pointer-events:none; z-index:2; }
+        .marquee { white-space:nowrap; overflow:hidden; }
+        .marquee span { display:inline-block; animation:scroll 22s linear infinite; }
+        @keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        .text-gradient-gold {
+            background: linear-gradient(90deg, #BE181A 0%, #F6D882 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-cream {
+            background: linear-gradient(90deg, #BE181A 0%, #F9EBAA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .editorial-outline {
+            color: transparent;
+            -webkit-text-stroke: 1px #BE181A;
+        }
+        /* Horizontal Scroll Hide Scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Editorial Image Placeholder (To be replaced with your assets) */
+        .asset-placeholder {
+            background-color: #e5d596;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #BE181A;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px dashed #BE181A;
+        }
+
+        /* Form fields editorial style */
+        .editorial-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #BE181A;
+            border-radius: 0;
+            padding: 10px 0;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            color: #BE181A;
+        }
+        .editorial-input:focus { outline: none; border-bottom: 2px solid #BE181A; }
+        .editorial-input::placeholder { color: rgba(190, 24, 26, 0.5); }
+    </style>
+</head>
+<body class="font-sans font-light antialiased bg-hero-pattern">
+
+    <!-- 09. NAVIGATION -->
+    <nav class="fixed w-full z-50 transition-all duration-300 backdrop-blur-md bg-white/90 border-b border-deepRed/15 py-4">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="font-serif text-2xl tracking-wide text-deepRed cursor-pointer">
+                <!-- UPLOAD LOGO HERE -->
+                LỤA LÀ NÓN
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium tracking-widest uppercase">
+                <a href="#ve-chung-toi" class="hover:text-deepRed transition-colors">Về Chúng Tôi</a>
+                <a href="#san-pham" class="hover:text-deepRed transition-colors">Sản Phẩm</a>
+                <a href="#quy-trinh" class="hover:text-deepRed transition-colors">Quy Trình</a>
+                <a href="#bang-gia" class="hover:text-deepRed transition-colors">Bảng Giá</a>
+            </div>
+            <div>
+                <a href="#dat-non" class="bg-deepRed text-paleCream px-6 py-3 text-sm tracking-widest uppercase hover:bg-vermilion transition-colors">
+                    Đặt Nón Ngay
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 10. HERO SECTION -->
+    <section class="relative min-h-screen flex items-center justify-center pt-28 px-6 overflow-hidden bg-white">
+        <div class="absolute inset-0 z-0 pattern-soft opacity-50"></div>
+        <div class="absolute -right-20 top-32 w-72 h-72 rounded-full bg-lightGold/60 blur-3xl"></div>
+        <div class="absolute -left-24 bottom-10 w-80 h-80 rounded-full bg-deepRed/10 blur-3xl"></div>
+        <div class="relative z-10 text-center max-w-4xl mx-auto flex flex-col items-center">
+            <p class="font-sans text-sm tracking-[0.3em] uppercase text-deepRed mb-4">Chúng Tôi Là</p>
+
+            <!-- TYPOGRAPHY ARTWORK UPLOAD HERE -->
+            <h1 class="font-serif text-6xl md:text-8xl lg:text-[9.5rem] leading-[.82] text-deepRed mb-8 display-shadow tracking-tight">
+                LỤA LÀ NÓN
+            </h1>
+
+            <h2 class="font-serif text-2xl md:text-4xl text-gradient-gold mb-8 italic">
+                Nón lá trong tay, Việt Nam bên mình.
+            </h2>
+
+            <p class="font-sans text-lg md:text-xl text-gray-800 leading-relaxed max-w-2xl mb-12">
+                Lụa Là Nón tự hào là thương hiệu chuyên cung cấp các sản phẩm móc khóa nón lá lụa được cá nhân hóa tỉ mỉ, giúp bạn thể hiện bản sắc riêng hay lưu giữ bản sắc doanh nghiệp trên từng chi tiết.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="#ca-nhan" class="border-2 border-deepRed text-deepRed px-8 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-deepRed hover:text-white transition-colors">
+                    [ Tạo Dấu Ấn Riêng ]
+                </a>
+                <a href="#doanh-nghiep" class="bg-deepRed text-white px-8 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-vermilion transition-colors">
+                    [ Tạo Dấu Ấn Doanh Nghiệp ]
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. PRODUCT SHOWCASE -->
+    <section class="py-28 bg-deepRed text-white overflow-hidden relative" id="san-pham">
+        <div class="max-w-7xl mx-auto px-6 mb-14 relative z-10">
+            <div class="flex items-end justify-between gap-6 mb-6"><p class="font-sans text-xs tracking-[.3em] uppercase text-lightGold">01 / sản phẩm</p><p class="hidden md:block text-sm opacity-60">Vuốt để xem →</p></div>
+            <h2 class="font-serif text-5xl md:text-8xl leading-[.9] tracking-tight">
+                NHỎ MỘT CHIẾC NÓN.<br>
+                <span class="text-lightGold italic">LỚN MỘT DẤU ẤN.</span>
+            </h2>
+        </div>
+
+        <!-- Horizontal Gallery -->
+        <div class="flex overflow-x-auto hide-scrollbar gap-8 px-6 pb-8 snap-x">
+            <!-- ẢNH MOCKUP SẢN PHẨM THẬT -->
+            <div class="w-[300px] md:w-[450px] h-[400px] md:h-[600px] flex-shrink-0 snap-center asset-placeholder border-white/40 image-frame">
+                UPLOAD PRODUCT PHOTO 01
+            </div>
+            <div class="w-[300px] md:w-[450px] h-[300px] md:h-[500px] mt-12 flex-shrink-0 snap-center asset-placeholder border-white/40 image-frame">
+                UPLOAD PRODUCT PHOTO 02
+            </div>
+            <div class="w-[400px] md:w-[600px] h-[400px] md:h-[600px] flex-shrink-0 snap-center asset-placeholder border-white/40 image-frame">
+                UPLOAD PRODUCT PHOTO 03
+            </div>
+            <div class="w-[300px] md:w-[450px] h-[400px] md:h-[550px] flex-shrink-0 snap-center asset-placeholder border-white/40 image-frame">
+                UPLOAD PRODUCT PHOTO 04
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. PRODUCT BENEFITS (Editorial Layout) -->
+    <section class="py-32 px-6 max-w-7xl mx-auto relative bg-white" id="ve-chung-toi">
+        <h2 class="font-serif text-5xl md:text-7xl text-deepRed mb-20 max-w-3xl">
+            <span class="text-sm font-sans font-bold tracking-[.3em] uppercase">02 / vì sao lụa là</span><br>
+            MỘT CHIẾC NÓN,<br>
+            <span class="editorial-outline">BỐN ĐIỂM KHÁC BIỆT.</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+            <!-- Col 1 -->
+            <div class="md:col-span-5 space-y-24">
+                <div>
+                    <h3 class="font-sans text-sm tracking-widest uppercase text-deepRed mb-4 border-b border-deepRed pb-2">01 — Chất Liệu & Chất Lượng</h3>
+                    <p class="font-sans text-lg text-gray-800">Móc khóa nón lá lụa cao cấp, được hoàn thiện chỉn chu với chất liệu và từng chi tiết được chăm chút, mang lại sản phẩm nhỏ gọn nhưng có độ bền và tính thẩm mỹ cao.</p>
+                </div>
+
+                <div class="asset-placeholder w-full h-[500px]">UPLOAD ẢNH DỌC 01</div>
+
+                <div>
+                    <h3 class="font-sans text-sm tracking-widest uppercase text-deepRed mb-4 border-b border-deepRed pb-2">03 — Chi Phí Hợp Lý</h3>
+                    <p class="font-sans text-lg text-gray-800">Mức giá được cân đối theo nhu cầu sử dụng, từ quà tặng cá nhân đến số lượng lớn cho doanh nghiệp, CLB và sự kiện, đảm bảo tính thẩm mỹ mà vẫn phù hợp ngân sách.</p>
+                </div>
+            </div>
+
+            <!-- Col 2 (Asymmetric shift) -->
+            <div class="md:col-span-5 md:col-start-7 mt-0 md:mt-32 space-y-24">
+                <div class="asset-placeholder w-full h-[600px]">UPLOAD ẢNH DỌC 02</div>
+
+                <div>
+                    <h3 class="font-sans text-sm tracking-widest uppercase text-deepRed mb-4 border-b border-deepRed pb-2">02 — Cá Nhân Hóa Dấu Ấn</h3>
+                    <p class="font-sans text-lg text-gray-800">Tùy chỉnh tên riêng, tên doanh nghiệp hoặc thông điệp theo nhu cầu. Thông tin được in bằng tem UV DTF có độ bám tốt, sắc nét và chắc chắn trên sản phẩm.</p>
+                </div>
+
+                <div>
+                    <h3 class="font-sans text-sm tracking-widest uppercase text-deepRed mb-4 border-b border-deepRed pb-2">04 — Hoàn Thiện & Đóng Gói</h3>
+                    <p class="font-sans text-lg text-gray-800">Chú trọng độ hoàn thiện từ sản phẩm đến packaging. Mỗi chiếc nón được đóng gói chỉn chu, sạch đẹp và sẵn sàng để trao tặng khách hàng, đối tác hoặc người nhận.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13. USE CASES (Split Screen) -->
+    <section class="flex flex-col md:flex-row min-h-[85vh] border-y border-deepRed/20">
+        <!-- LEFT: Cá Nhân -->
+        <div class="w-full md:w-1/2 bg-[#F9EBAA] p-12 md:p-24 flex flex-col justify-between border-r border-deepRed/20" id="ca-nhan">
+            <div>
+                <h2 class="font-serif text-5xl text-deepRed mb-6">Một chiếc cho mình.<br><span class="italic">Một món quà cho người mình thương.</span></h2>
+                <ul class="font-sans text-sm tracking-widest uppercase space-y-4 text-deepRed opacity-80 mb-12">
+                    <li>Quà Tặng</li>
+                    <li>Bạn Bè</li>
+                    <li>Kỷ Niệm</li>
+                    <li>Trang Trí Túi</li>
+                    <li>Lưu Niệm</li>
+                </ul>
+            </div>
+            <div class="asset-placeholder w-full h-[300px] mb-8">UPLOAD ẢNH / MOCKUP CÁ NHÂN</div>
+            <a href="#dat-non" class="text-deepRed font-sans font-bold tracking-widest uppercase hover:opacity-70">→ Tạo Dấu Ấn Riêng</a>
+        </div>
+
+        <!-- RIGHT: Tổ Chức -->
+        <div class="w-full md:w-1/2 bg-deepRed p-12 md:p-24 pattern-dots flex flex-col justify-between text-paleCream" id="doanh-nghiep">
+            <div>
+                <h2 class="font-serif text-5xl text-paleCream mb-6">Một món quà nhỏ.<br><span class="text-lightGold italic">Một nhận diện lớn.</span></h2>
+                <ul class="font-sans text-sm tracking-widest uppercase space-y-4 text-lightGold opacity-80 mb-12">
+                    <li>Sự Kiện</li>
+                    <li>CLB / Đội Nhóm</li>
+                    <li>Quà Doanh Nghiệp</li>
+                    <li>Employee Gift</li>
+                    <li>Branding</li>
+                </ul>
+            </div>
+            <div class="asset-placeholder border-paleCream text-paleCream w-full h-[300px] mb-8">UPLOAD ẢNH / MOCKUP DOANH NGHIỆP</div>
+            <a href="#dat-non" class="text-lightGold font-sans font-bold tracking-widest uppercase hover:opacity-70">→ Tạo Dấu Ấn Doanh Nghiệp</a>
+        </div>
+    </section>
+
+    <!-- 14. ORDER PROCESS -->
+    <section class="py-32 px-6 max-w-[1400px] mx-auto overflow-hidden bg-white" id="quy-trinh">
+        <h2 class="font-serif text-5xl md:text-7xl text-deepRed mb-20 text-center">
+            TỪ Ý TƯỞNG<br>
+            <span class="italic">ĐẾN CHIẾC NÓN TRÊN TAY.</span>
+        </h2>
+
+        <div class="flex flex-col md:flex-row gap-8 justify-between relative">
+            <!-- Connector Line Background (Desktop) -->
+            <div class="hidden md:block absolute top-12 left-0 w-full h-[1px] bg-deepRed/30 z-0"></div>
+
+            <!-- Steps -->
+            <div class="relative z-10 flex-1 bg-paleCream p-6 border border-deepRed/20 hover:border-deepRed transition-colors">
+                <div class="font-serif text-7xl text-deepRed opacity-20 mb-4 leading-none">01</div>
+                <h3 class="font-sans font-bold tracking-widest uppercase text-deepRed mb-2 text-sm">Gửi Yêu Cầu</h3>
+                <p class="font-sans text-sm text-gray-700">Cung cấp số lượng, nội dung cần in và thời gian mong muốn nhận hàng.</p>
+            </div>
+
+            <div class="relative z-10 flex-1 bg-paleCream p-6 border border-deepRed/20 hover:border-deepRed transition-colors mt-0 md:mt-12">
+                <div class="font-serif text-7xl text-deepRed opacity-20 mb-4 leading-none">02</div>
+                <h3 class="font-sans font-bold tracking-widest uppercase text-deepRed mb-2 text-sm">Duyệt Mockup</h3>
+                <p class="font-sans text-sm text-gray-700">Lụa Là lên mockup theo yêu cầu và gửi hình minh họa để bạn kiểm tra, xác nhận.</p>
+            </div>
+
+            <div class="relative z-10 flex-1 bg-deepRed text-paleCream p-6 mt-0 md:mt-24 shadow-2xl">
+                <div class="font-serif text-7xl text-lightGold opacity-30 mb-4 leading-none">03</div>
+                <h3 class="font-sans font-bold tracking-widest uppercase text-lightGold mb-2 text-sm">Sản Xuất</h3>
+                <p class="font-sans text-sm text-paleCream/80">Tiến hành sản xuất tỉ mỉ theo mẫu đã thống nhất.</p>
+            </div>
+
+            <div class="relative z-10 flex-1 bg-paleCream p-6 border border-deepRed/20 hover:border-deepRed transition-colors mt-0 md:mt-12">
+                <div class="font-serif text-7xl text-deepRed opacity-20 mb-4 leading-none">04</div>
+                <h3 class="font-sans font-bold tracking-widest uppercase text-deepRed mb-2 text-sm">Kiểm Tra & Đóng Gói</h3>
+                <p class="font-sans text-sm text-gray-700">Cập nhật hình ảnh/video, kiểm tra sản phẩm và đóng gói chỉn chu.</p>
+            </div>
+
+            <div class="relative z-10 flex-1 bg-paleCream p-6 border border-deepRed/20 hover:border-deepRed transition-colors">
+                <div class="font-serif text-7xl text-deepRed opacity-20 mb-4 leading-none">05</div>
+                <h3 class="font-sans font-bold tracking-widest uppercase text-deepRed mb-2 text-sm">Nhận Hàng</h3>
+                <p class="font-sans text-sm text-gray-700">Sản phẩm hoàn thiện, sẵn sàng để trao tặng.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. PRICING (Premium Catalogue) -->
+    <section class="py-28 bg-[#F9EBAA] pattern-soft relative border-y border-deepRed/20" id="bang-gia">
+        <div class="max-w-6xl mx-auto px-6 md:px-12 relative z-10 bg-white p-10 md:p-20 border-2 border-deepRed/20">
+            <h2 class="font-serif text-4xl md:text-6xl text-deepRed mb-16 text-center">
+                CHỌN SỐ LƯỢNG.<br>
+                <span class="italic text-gradient-gold">CHỌN DẤU ẤN.</span>
+            </h2>
+
+            <div class="w-full text-left font-sans mb-16">
+                <div class="flex justify-between border-b-2 border-deepRed py-4 font-bold tracking-widest uppercase text-sm text-deepRed">
+                    <span>Số Lượng</span>
+                    <span>Giá Tham Khảo</span>
+                </div>
+                <div class="flex justify-between border-b border-deepRed/20 py-6 text-lg">
+                    <span>01 – 09</span>
+                    <span>30.000đ / chiếc</span>
+                </div>
+                <div class="flex justify-between border-b border-deepRed/20 py-6 text-lg">
+                    <span>10 – 49</span>
+                    <span>27.000đ / chiếc</span>
+                </div>
+                <div class="flex justify-between border-b border-deepRed/20 py-6 text-lg">
+                    <span>50 – 99</span>
+                    <span>24.000đ / chiếc</span>
+                </div>
+                <div class="flex justify-between border-b border-deepRed py-6 text-xl md:text-2xl font-serif text-deepRed italic">
+                    <span>100+</span>
+                    <span>20.000đ / chiếc</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 font-sans text-sm">
+                <div>
+                    <h4 class="font-bold tracking-widest uppercase text-deepRed mb-4">Giá Đã Bao Gồm</h4>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside marker:text-deepRed">
+                        <li>Sản phẩm móc khóa nón lá</li>
+                        <li>Cá nhân hóa cơ bản bằng UV DTF</li>
+                        <li>Đóng gói tiêu chuẩn</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold tracking-widest uppercase text-deepRed mb-4">Có Thể Phát Sinh</h4>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside marker:text-deepRed opacity-80">
+                        <li>Thiết kế hoặc xử lý logo riêng</li>
+                        <li>Nội dung cá nhân hóa đặc biệt</li>
+                        <li>Packaging theo yêu cầu riêng</li>
+                        <li>Yêu cầu SL/Thời gian đặc biệt</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 17 & 18. FINAL CTA & FORM -->
+    <section class="bg-gradient-to-br from-deepRed via-deepRed to-vermilion py-32 px-6 text-white relative overflow-hidden pattern-dots" id="dat-non">
+        <!-- Pattern Overlay -->
+        <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'2\' fill=\'%23F6D882\' fill-opacity=\'1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E')]"></div>
+
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 relative z-10 items-center">
+            <!-- CTA Content -->
+            <div>
+                <h2 class="font-serif text-6xl md:text-8xl leading-none mb-8 text-paleCream">
+                    MỘT CHIẾC NÓN.<br>
+                    <span class="text-lightGold italic">MỘT DẤU ẤN RIÊNG.</span>
+                </h2>
+                <p class="font-sans text-xl text-paleCream/80 mb-12 max-w-md">
+                    Bạn đã có ý tưởng.<br>
+                    Lụa Là giúp bạn biến nó thành một món quà có thể cầm trên tay.
+                </p>
+                <div class="asset-placeholder border-lightGold text-lightGold w-full h-[200px] mb-8 bg-transparent">
+                    UPLOAD PATTERN / HÌNH MẪU
+                </div>
+            </div>
+
+            <!-- Editorial Form -->
+            <div class="bg-white p-10 md:p-16 text-deepRed border-l-8 border-lightGold shadow-2xl">
+                <h3 class="font-sans font-bold tracking-widest uppercase mb-10 text-xl border-b-2 border-deepRed pb-4">Gửi Yêu Cầu Thiết Kế</h3>
+                <form class="space-y-8 flex flex-col">
+                    <input type="text" placeholder="HỌ TÊN" class="editorial-input w-full">
+                    <input type="tel" placeholder="SỐ ĐIỆN THOẠI" class="editorial-input w-full">
+                    <input type="text" placeholder="SỐ LƯỢNG DỰ KIẾN" class="editorial-input w-full">
+
+                    <div class="font-sans pt-4">
+                        <p class="text-sm tracking-widest uppercase mb-4 opacity-70">BẠN ĐẶT CHO:</p>
+                        <div class="flex gap-8">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="type" class="accent-deepRed w-4 h-4">
+                                <span class="tracking-widest uppercase text-sm">Cá Nhân</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="type" class="accent-deepRed w-4 h-4">
+                                <span class="tracking-widest uppercase text-sm">Tổ Chức</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <textarea placeholder="NỘI DUNG YÊU CẦU CỦA BẠN..." class="editorial-input w-full resize-none h-24 pt-4"></textarea>
+
+                    <button type="submit" class="bg-deepRed text-paleCream font-sans tracking-widest uppercase text-sm py-5 px-8 hover:bg-vermilion transition-colors self-start mt-8">
+                        Gửi Yêu Cầu →
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 19. FOOTER -->
+    <footer class="bg-deepRed text-white py-20 px-6 border-t border-white/20 pattern-dots">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+            <!-- Brand -->
+            <div class="max-w-sm">
+                <div class="font-serif text-4xl mb-4 text-lightGold">
+                    <!-- LOGO FOOTER -->
+                    LỤA LÀ NÓN
+                </div>
+                <p class="font-serif italic text-xl opacity-80 mb-8">Nón lá trong tay, Việt Nam bên mình.</p>
+                <a href="#dat-non" class="inline-block border border-paleCream text-paleCream px-6 py-3 text-sm tracking-widest uppercase hover:bg-paleCream hover:text-deepRed transition-colors">
+                    Đặt Nón Ngay →
+                </a>
+            </div>
+
+            <!-- Links -->
+            <div class="flex flex-col md:flex-row gap-16 font-sans text-sm tracking-widest uppercase opacity-80">
+                <div class="flex flex-col space-y-4">
+                    <a href="#" class="hover:text-lightGold transition-colors">Về Chúng Tôi</a>
+                    <a href="#" class="hover:text-lightGold transition-colors">Sản Phẩm</a>
+                    <a href="#" class="hover:text-lightGold transition-colors">Bảng Giá</a>
+                </div>
+                <div class="flex flex-col space-y-4">
+                    <a href="#" class="hover:text-lightGold transition-colors">Facebook</a>
+                    <a href="#" class="hover:text-lightGold transition-colors">Instagram</a>
+                    <a href="#" class="hover:text-lightGold transition-colors">Tiktok</a>
+                </div>
+                <div class="flex flex-col space-y-4 normal-case tracking-normal">
+                    <p class="uppercase tracking-widest text-lightGold mb-2">Liên Hệ</p>
+                    <p>hello@lualanona.vn</p>
+                    <p>090x.xxx.xxx</p>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-paleCream/20 font-sans text-xs tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between">
+            <p>© 2026 LUA LA NON. ALL RIGHTS RESERVED.</p>
+            <p>DESIGNED AS A BRAND EXPERIENCE.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
