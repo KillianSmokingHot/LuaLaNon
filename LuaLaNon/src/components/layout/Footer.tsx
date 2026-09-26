@@ -36,12 +36,12 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <Link href="#ve-chung-toi" className="flex items-center gap-3 mb-4">
-              <div className="h-12 w-12 overflow-hidden rounded-lg bg-white/95 flex items-center justify-center">
+              <div className="h-12 w-12 overflow-hidden rounded-lg bg-[#FDF6DC] flex items-center justify-center border border-[#F7D87F]">
                 <Image
-                  src={brand.navLogo}
-                  alt={brand.name}
-                  width={40}
-                  height={40}
+                  src="/images/LOGO.jpg"
+                  alt="Lụa Là Nón Logo"
+                  width={44}
+                  height={44}
                   className="h-10 w-10 object-contain"
                 />
               </div>

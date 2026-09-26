@@ -2,18 +2,35 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, Phone, X, type LucideIcon } from "lucide-react";
+import { Phone, X } from "lucide-react";
 import { floatingContactConfig } from "@/data/content";
 
-const iconMap: Record<string, LucideIcon> = {
-  zalo: MessageCircle,
-  messenger: MessageCircle,
+// Custom SVG icons for Zalo and Messenger (official brand marks)
+const ZaloIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <circle cx="30" cy="30" r="30" fill="#0068FF"/>
+    <path d="M42.5 27.5C42.5 27.5 42.5 30.5 39 33.5C35.5 36.5 31 36.5 31 36.5C31 36.5 30 35.5 30 33.5C30 31.5 32 29.5 34 29.5C36 29.5 37 30.5 37 31.5C37 31.5 35 31.5 33 29.5C31.5 28 32.5 26 32.5 26C32.5 26 30.5 27 28.5 29.5C26.5 32 25.5 35 25.5 36.5C25.5 38 27 39.5 28 39.5C29 39.5 30 38.5 30 38.5L27 41.5L24.5 38.5C24.5 38.5 26 37.5 26.5 36C27 34.5 27.5 33 28.5 31.5C29.5 30 30.5 28.5 32 27.5C32.5 27 33.5 26 35 25C36.5 24 37.5 23.5 38.5 23.5C39.5 23.5 40.5 24 41 25C41.5 26 41.5 27.5 42.5 27.5Z" fill="white"/>
+  </svg>
+);
+
+const MessengerIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <circle cx="30" cy="30" r="30" fill="#0084FF"/>
+    <path d="M35 27.5L27.5 33.5L23.5 27.5L34 22.5L38 27.5L35 27.5Z" fill="white"/>
+    <path d="M24 22H36C40.4183 22 44 25.5817 44 30C44 32.5 43 35 41.5 36.5L36.5 44L31 39.5C30.5 40.5 29.5 41 28.5 41C26.5 41 25 39.5 25 37.5C25 36.5 25.5 35.5 26.5 35L24 39.5V22Z" fill="white"/>
+  </svg>
+);
+
+type CustomIcon = React.FC<{ className?: string }>;
+
+const iconMap: Record<string, CustomIcon | typeof Phone> = {
+  zalo: ZaloIcon,
+  messenger: MessengerIcon,
   phone: Phone,
 };
 
 export default function FloatingContactBar() {
   const [expanded, setExpanded] = useState(false);
-  const [hovered, setHovered] = useState<string | null>(null);
 
   if (!floatingContactConfig.enabled) return null;
 
@@ -24,7 +41,7 @@ export default function FloatingContactBar() {
       <AnimatePresence>
         {expanded &&
           channels.map((channel, i) => {
-            const Icon = iconMap[channel.id] || MessageCircle;
+            const Icon = iconMap[channel.id] || Phone;
             const isExternal = channel.url.startsWith("http");
 
             return (
@@ -33,45 +50,25 @@ export default function FloatingContactBar() {
                 href={channel.url}
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
-                initial={{ opacity: 0, y: 20, scale: 0.5 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.5 }}
-                transition={{ delay: i * 0.05, duration: 0.3, ease: "easeOut" }}
-                onMouseEnter={() => setHovered(channel.id)}
-                onMouseLeave={() => setHovered(null)}
-                className="group relative flex items-center gap-3 cursor-pointer"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ delay: i * 0.05, duration: 0.25 }}
+                className="group flex items-center gap-3 cursor-pointer"
                 aria-label={`Liên hệ qua ${channel.name}`}
               >
-                {/* Tooltip label */}
-                <AnimatePresence>
-                  {hovered === channel.id && (
-                    <motion.span
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      className="bg-[#BE1A1A] text-white text-sm px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap font-body font-medium"
-                    >
-                      {channel.name === "Hotline" ? "Gọi Hotline" : `Nhắn qua ${channel.name}`}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                {/* Always-visible label */}
+                <span className="bg-white text-[#2a0a0a] text-sm px-4 py-2.5 rounded-xl shadow-xl whitespace-nowrap font-body font-semibold border border-[#BE1A1A]/20">
+                  {channel.name === "Hotline" ? "Gọi 0795647905" : `Nhắn qua ${channel.name}`}
+                </span>
 
-                {/* Icon button with pulse */}
-                <div className="relative">
-                  {/* Pulse ring (animated) */}
+                {/* Icon button with white ring for contrast */}
+                <div className="relative flex-shrink-0">
                   <span
-                    className="absolute inset-0 rounded-full opacity-60"
-                    style={{
-                      backgroundColor: channel.brandColor,
-                      animation: "pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite",
-                    }}
-                  />
-                  {/* Inner solid circle */}
-                  <span
-                    className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-lg transition-transform group-hover:scale-110"
+                    className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-xl border-[3px] border-white transition-transform hover:scale-110"
                     style={{ backgroundColor: channel.brandColor }}
                   >
-                    <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
+                    <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white [&_svg]:w-full [&_svg]:h-full" />
                   </span>
                 </div>
               </motion.a>
@@ -128,7 +125,10 @@ export default function FloatingContactBar() {
               transition={{ duration: 0.2 }}
               className="relative z-10"
             >
-              <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
+              {/* Use a simple chat icon for the toggle button */}
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 sm:w-7 sm:h-7">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+              </svg>
               {/* Notification dot */}
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-[#BE1A1A]" />
             </motion.div>
