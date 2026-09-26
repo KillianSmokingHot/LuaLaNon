@@ -10,7 +10,7 @@ export default function Pricing() {
   const scrollY = useScrollY();
 
   return (
-    <section id="bang-gia" className="relative py-20 sm:py-28 overflow-hidden" style={{ backgroundColor: "#F8EBAB" }}>
+    <section id="bang-gia" className="relative py-20 sm:py-28 overflow-x-hidden" style={{ backgroundColor: "#F8EBAB" }}>
       {/* Polka dot bg */}
       <div
         className="absolute inset-0 opacity-30 pointer-events-none"
@@ -80,7 +80,7 @@ export default function Pricing() {
               }`}
             >
               {tier.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#F7D87F] text-[#BE1A1A] text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-md whitespace-nowrap">
+                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-[#F7D87F] text-[#BE1A1A] text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1 shadow-lg whitespace-nowrap border-2 border-[#BE1A1A] z-20">
                   <Star className="w-3.5 h-3.5" fill="#BE1A1A" />
                   {tier.badge}
                 </div>

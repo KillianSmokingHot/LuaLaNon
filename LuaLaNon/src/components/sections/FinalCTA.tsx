@@ -2,18 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle, Send } from "lucide-react";
+import { ArrowRight, CheckCircle, Send, AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { finalCta, leadFormConfig } from "@/data/content";
-
-/**
- * TODO: Dán URL Google Apps Script Web App hoặc SheetDB vào đây.
- * Khi URL được cấu hình, dữ liệu form sẽ tự động được đẩy về Google Sheets.
- * Ví dụ: const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz.../exec";
- */
-const GOOGLE_SHEETS_WEBHOOK_URL = "";
 
 const formSchema = z.object({
   name: z.string().min(1, leadFormConfig.fields.name.errorRequired),
@@ -33,6 +26,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function FinalCTA() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -45,38 +39,33 @@ export default function FinalCTA() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    const payload = {
-      ...data,
-      submittedAt: new Date().toISOString(),
-      source: "landing-page",
-    };
+    try {
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    // Gửi về Google Sheets webhook (nếu đã config) — fire-and-forget, không block UI
-    if (GOOGLE_SHEETS_WEBHOOK_URL) {
-      try {
-        fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }).catch((err) => console.warn("Webhook error:", err));
-      } catch (err) {
-        console.warn("Webhook setup error:", err);
+      const result = await response.json();
+
+      if (result.success) {
+        // Show success state
+        setSubmitted(true);
+        reset();
+      } else {
+        // Show error message from API
+        setSubmitError(result.message || "Đã xảy ra lỗi. Vui lòng thử lại.");
       }
-    } else {
-      console.info(
-        "[Lead form] GOOGLE_SHEETS_WEBHOOK_URL chưa được cấu hình. Dữ liệu:",
-        payload
-      );
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setSubmitError("Đã xảy ra lỗi kết nối. Vui lòng thử lại sau.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Đảm bảo loading hiển thị tối thiểu 1.5s để UX mượt mà
-    await new Promise((r) => setTimeout(r, 1500));
-
-    setSubmitted(true);
-    setIsSubmitting(false);
-    reset();
   };
 
   return (
@@ -180,6 +169,14 @@ export default function FinalCTA() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  {/* Error message */}
+                  {submitError && (
+                    <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center gap-3">
+                      <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                      <p className="text-red-700 text-sm">{submitError}</p>
+                    </div>
+                  )}
+
                   {/* Họ và tên */}
                   <div>
                     <label className="block text-[#BE1A1A] text-sm font-semibold mb-1.5 uppercase tracking-wider">

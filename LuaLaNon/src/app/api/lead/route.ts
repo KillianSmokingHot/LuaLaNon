@@ -1,53 +1,103 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
-interface LeadData {
-  name: string;
-  phone: string;
-  email: string;
-  timestamp?: string;
-}
+// Zod schema matching the frontend form
+const leadSchema = z.object({
+  name: z.string().min(1, "Vui lòng nhập họ tên"),
+  phone: z
+    .string()
+    .min(1, "Vui lòng nhập số điện thoại")
+    .regex(/^(0[0-9]{9,10})$/, "Số điện thoại không hợp lệ"),
+  quantity: z.string().min(1, "Vui lòng nhập số lượng"),
+  orderFor: z.enum(["individual", "organization"], {
+    errorMap: () => ({ message: "Vui lòng chọn loại đặt hàng" }),
+  }),
+  note: z.string().optional(),
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const data: LeadData = await request.json();
+    const body = await request.json();
 
-    // Validate required fields
-    if (!data.name || !data.phone || !data.email) {
+    // Validate with Zod
+    const validationResult = leadSchema.safeParse(body);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { success: false, message: "Missing required fields" },
+        {
+          success: false,
+          message: "Dữ liệu không hợp lệ",
+          errors: validationResult.error.flatten().fieldErrors,
+        },
         { status: 400 }
       );
     }
 
-    // Add timestamp
-    const leadWithTimestamp: LeadData = {
-      ...data,
-      timestamp: new Date().toISOString(),
+    const validatedData = validationResult.data;
+
+    // Prepare payload for Google Sheets
+    const payload = {
+      ...validatedData,
+      submittedAt: new Date().toISOString(),
+      source: "landing-page",
     };
 
-    // In a real app, you would:
-    // 1. Save to database (Prisma, Supabase, etc.)
-    // 2. Send to email via SendGrid, Resend, etc.
-    // 3. Send to Google Sheets via API
-    // 4. Send to CRM via webhook
+    // Get webhook URL from environment
+    const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
 
-    // For now, log to console (replace with actual implementation)
-    console.log("New lead received:", leadWithTimestamp);
+    if (!webhookUrl) {
+      // No webhook configured - log but still return success for demo
+      console.log("[Lead API] GOOGLE_SHEETS_WEBHOOK_URL not configured. Lead data:", payload);
+      return NextResponse.json({
+        success: true,
+        message: "Lead received (webhook not configured)",
+        data: payload,
+      });
+    }
 
-    // TODO: Implement actual storage
-    // Option 1: Send to Google Sheets
-    // Option 2: Send to email
-    // Option 3: Save to a JSON file for demo
+    // Forward to Google Apps Script / SheetDB webhook
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        redirect: "follow",
+      });
 
-    return NextResponse.json({
-      success: true,
-      message: "Lead saved successfully",
-      data: leadWithTimestamp,
-    });
+      // Google Apps Script may not return proper JSON, handle accordingly
+      if (response.ok || response.status === 200 || response.redirected) {
+        return NextResponse.json({
+          success: true,
+          message: "Yêu cầu đã được gửi thành công!",
+          data: payload,
+        });
+      }
+
+      // If response is not ok, log but still return success to user
+      console.error("[Lead API] Webhook returned non-success status:", response.status);
+      return NextResponse.json({
+        success: true,
+        message: "Yêu cầu đã được gửi thành công!",
+        data: payload,
+      });
+    } catch (fetchError) {
+      console.error("[Lead API] Webhook fetch error:", fetchError);
+      // Return success anyway to not block user experience
+      // In production, you might want to queue this for retry
+      return NextResponse.json({
+        success: true,
+        message: "Yêu cầu đã được gửi thành công!",
+        data: payload,
+      });
+    }
   } catch (error) {
-    console.error("Error saving lead:", error);
+    console.error("[Lead API] Unexpected error:", error);
     return NextResponse.json(
-      { success: false, message: "Internal server error" },
+      {
+        success: false,
+        message: "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại sau.",
+      },
       { status: 500 }
     );
   }

@@ -1,9 +1,24 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, KeyRound, Building2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useCases } from "@/data/content";
+
+/* ============================================================
+   USE CASE IMAGES — using actual product mockups
+   ============================================================ */
+const useCaseImages = {
+  individual: {
+    src: "/images/products/showcase-1.png",
+    alt: "Móc khóa nón lá lụa cá nhân",
+  },
+  organization: {
+    src: "/images/products/showcase-2.png",
+    alt: "Móc khóa nón lá lụa doanh nghiệp",
+  },
+};
 
 export default function UseCases() {
   return (
@@ -44,10 +59,16 @@ export default function UseCases() {
               ))}
             </div>
 
-            {/* Image placeholder — landscape 16/9 */}
-            <div className="relative w-full aspect-video rounded-2xl border-[2px] border-[#BE1A1A] bg-gradient-to-br from-[#FDF6DC] to-[#F7D87F] mb-8 overflow-hidden flex items-center justify-center">
+            {/* Product image — using real keychain mockup */}
+            <div className="relative w-full aspect-video rounded-2xl border-[2px] border-[#BE1A1A] bg-gradient-to-br from-[#FDF6DC] to-[#F7D87F] mb-8 overflow-hidden">
+              <Image
+                src={useCaseImages.individual.src}
+                alt={useCaseImages.individual.alt}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
               <div className="absolute inset-3 rounded-xl border border-dashed border-[#BE1A1A]/30" />
-              <KeyRound className="w-16 h-16 text-[#BE1A1A] opacity-80" strokeWidth={1.5} />
               <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#BE1A1A] text-[#F7D87F] text-[9px] uppercase tracking-wider font-bold">
                 Phụ kiện cá nhân
               </div>
@@ -98,10 +119,16 @@ export default function UseCases() {
               ))}
             </div>
 
-            {/* Image placeholder — landscape 16/9 */}
-            <div className="relative w-full aspect-video rounded-2xl border-[2px] border-[#F7D87F] bg-gradient-to-br from-[#D0311E] to-[#BE1A1A] mb-8 overflow-hidden flex items-center justify-center">
+            {/* Product image — using real keychain mockup */}
+            <div className="relative w-full aspect-video rounded-2xl border-[2px] border-[#F7D87F] bg-gradient-to-br from-[#D0311E] to-[#BE1A1A] mb-8 overflow-hidden">
+              <Image
+                src={useCaseImages.organization.src}
+                alt={useCaseImages.organization.alt}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
               <div className="absolute inset-3 rounded-xl border border-dashed border-[#F7D87F]/30" />
-              <Building2 className="w-16 h-16 text-[#F7D87F] opacity-90" strokeWidth={1.5} />
               <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#F7D87F] text-[#BE1A1A] text-[9px] uppercase tracking-wider font-bold">
                 Quà tặng doanh nghiệp
               </div>

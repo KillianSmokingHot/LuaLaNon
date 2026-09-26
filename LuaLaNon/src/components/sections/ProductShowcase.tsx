@@ -1,25 +1,31 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Sparkles, PenTool, Wallet, Package, type LucideIcon } from "lucide-react";
 import { productFeatures } from "@/data/content";
 
-const iconMap: Record<string, LucideIcon> = {
-  Sparkles,
-  PenTool,
-  Wallet,
-  Package,
-};
+/* ============================================================
+   PRODUCT MOCKUP IMAGES — LARGE GALLERY
+   All 8 available mockups for the marquee gallery
+   ============================================================ */
+const productMockups = [
+  { src: "/images/products/showcase-1.png", alt: "Móc khóa nón lá lụa" },
+  { src: "/images/products/showcase-2.png", alt: "Móc khóa nón lá cá nhân hóa" },
+  { src: "/images/products/momo.png", alt: "MoMo móc khóa" },
+  { src: "/images/products/acb.png", alt: "ACB móc khóa" },
+  { src: "/images/products/shopee.png", alt: "Shopee móc khóa" },
+  { src: "/images/products/tpbank.png", alt: "TPBank móc khóa" },
+  { src: "/images/products/vinamilk.png", alt: "Vinamilk móc khóa" },
+  { src: "/images/products/coffee-house.png", alt: "The Coffee House móc khóa" },
+];
 
 /* ============================================================
-   PHẦN A — Gallery Marquee
+   STICKY PRODUCT IMAGES — for detail section below
    ============================================================ */
-const marqueeItems = [
-  { label: "Móc khóa nón lá", sub: "Chất liệu lụa cao cấp", icon: Sparkles },
-  { label: "Cá nhân hóa", sub: "UV DTF sắc nét", icon: PenTool },
-  { label: "Hoàn thiện", sub: "Đóng gói tỉ mỉ", icon: Package },
-  { label: "Chi phí hợp lý", sub: "Từ cá nhân đến tổ chức", icon: Wallet },
+const productImages = [
+  { src: "/images/products/showcase-1.png", alt: "Móc khóa nón lá lụa" },
+  { src: "/images/products/showcase-2.png", alt: "Móc khóa nón lá cá nhân hóa" },
 ];
 
 /* ============================================================
@@ -54,11 +60,11 @@ export default function ProductShowcase() {
   }, []);
 
   return (
-    <section id="san-pham" className="relative overflow-hidden">
+    <section id="san-pham" className="relative">
       {/* =====================================================
-          PHẦN A — GALLERY MARQUEE
+          PHẦN A — GALLERY MARQUEE with REAL PRODUCT IMAGES
           ===================================================== */}
-      <div className="relative overflow-hidden" style={{ backgroundColor: "#BE1A1A", minHeight: "75vh" }}>
+      <div className="relative overflow-hidden" style={{ backgroundColor: "#BE1A1A" }}>
         <div
           className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none"
           style={{
@@ -89,47 +95,37 @@ export default function ProductShowcase() {
             </h2>
           </motion.div>
 
-          {/* Marquee */}
-          <div className="relative mt-10 -mx-4 sm:-mx-6 lg:-mx-10 overflow-hidden">
-            <div
-              className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 z-10 pointer-events-none"
-              style={{ background: "linear-gradient(to right, #BE1A1A, transparent)" }}
-            />
-            <div
-              className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 z-10 pointer-events-none"
-              style={{ background: "linear-gradient(to left, #BE1A1A, transparent)" }}
-            />
-            <div
-              className="flex gap-6"
-              style={{
-                animation: "marquee-scroll 40s linear infinite",
-                width: "max-content",
-              }}
-            >
-              {[...marqueeItems, ...marqueeItems].map((item, i) => {
-                const Icon = item.icon;
-                return (
+          {/* Large Moving Mockup Gallery */}
+          <div className="mt-8 sm:mt-10 overflow-hidden">
+            <p className="text-white/70 font-body text-sm mb-6 text-center">
+              Một số mẫu cá nhân hóa minh họa
+            </p>
+            {/* Marquee container - no overflow on container, inner element scrolls */}
+            <div className="relative">
+              <div
+                className="flex gap-5 marquee-track"
+                style={{
+                  animation: "marquee-scroll 30s linear infinite",
+                }}
+              >
+                {/* Duplicate for seamless loop */}
+                {[...productMockups, ...productMockups].map((mockup, i) => (
                   <div
                     key={i}
-                    className="flex-shrink-0 rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
-                    style={{ width: "280px", aspectRatio: "3/4" }}
+                    className="flex-shrink-0 w-[260px] sm:w-[300px] lg:w-[320px] rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.35)] bg-gradient-to-br from-[#FDF6DC] to-[#F8EBAB]"
+                    style={{ aspectRatio: "3/4" }}
                   >
-                    <div className="w-full h-full bg-gradient-to-br from-[#FDF6DC] to-[#F8EBAB] flex flex-col items-center justify-center p-6 relative">
-                      <div className="absolute inset-3 rounded-2xl border border-dashed border-[#BE1A1A]/20" />
-                      <Icon className="w-16 h-16 text-[#BE1A1A] opacity-80 mb-5" strokeWidth={1.5} />
-                      <p className="text-[#BE1A1A] font-display font-bold text-xl text-center leading-tight mb-1">
-                        {item.label}
-                      </p>
-                      <p className="text-[#BE1A1A]/70 font-body text-sm text-center">
-                        {item.sub}
-                      </p>
-                      <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#BE1A1A] text-[#F7D87F] text-[9px] font-bold uppercase tracking-wider">
-                        Lụa Là Nón
-                      </div>
-                    </div>
+                    <Image
+                      src={mockup.src}
+                      alt={mockup.alt}
+                      fill
+                      className="object-contain p-4"
+                      sizes="320px"
+                      loading={i >= productMockups.length ? "lazy" : "eager"}
+                    />
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -137,20 +133,12 @@ export default function ProductShowcase() {
 
       {/* =====================================================
           PHẦN B — STICKY 2-COLUMN
-          Container: display:flex | align-items:flex-start
-          Left col: position:sticky | top:100px | align-self:flex-start
-          Right col: 4 blocks, min-height:50vh each
-          KHÔNG có watermark số mờ
+          Using CSS Grid with proper sticky positioning
           ===================================================== */}
       <div
         className="relative bg-white"
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          position: "relative",
-        }}
       >
-        {/* Dot bg — không có số mờ */}
+        {/* Dot bg */}
         <div
           className="absolute inset-0 opacity-[0.06] pointer-events-none"
           style={{
@@ -159,110 +147,160 @@ export default function ProductShowcase() {
           }}
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 w-full">
+        {/* Sticky 2-column container */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
 
-          {/* ========== CỘT TRÁI — STICKY IMAGE ========== */}
-          <div
-            style={{
-              position: "sticky",
-              top: "100px",
-              alignSelf: "flex-start",
-              float: "left",
-              width: "48%",
-              boxSizing: "border-box",
-              paddingRight: "2rem",
-            }}
-          >
-            <div
-              className="relative w-full rounded-[2rem] border-[2.5px] border-[#BE1A1A] bg-gradient-to-br from-[#FDF6DC] via-[#F8EBAB] to-[#FDF6DC] shadow-[0_20px_60px_rgba(190,26,26,0.15)] overflow-hidden"
-              style={{ aspectRatio: "1/1" }}
-            >
-              {/* Inner dashed border */}
-              <div className="absolute inset-3 rounded-[1.5rem] border border-dashed border-[#BE1A1A]/30 z-20" />
+            {/* ========== CỘT TRÁI — STICKY PRODUCT VISUAL ========== */}
+            {/*
+              STICKY COLUMN RULES:
+              - position: sticky (NOT fixed)
+              - top: 96px (accounting for header ~80px + breathing room)
+              - align-self: start (grid alignment)
+              - NO overflow: hidden on parent containers
+              - NO transforms on parent containers
+            */}
+            <div className="lg:sticky lg:top-24 lg:self-start order-1">
+              <div
+                className="relative w-full rounded-[2rem] border-[2.5px] border-[#BE1A1A] bg-gradient-to-br from-[#FDF6DC] via-[#F8EBAB] to-[#FDF6DC] shadow-[0_20px_60px_rgba(190,26,26,0.15)] overflow-hidden"
+                style={{ aspectRatio: "1/1" }}
+              >
+                {/* Product images layered */}
+                {productImages.map((img, i) => {
+                  const isActive = i === activeIndex || (activeIndex === 0 && i === 0) || (activeIndex >= 2 && i === 1);
+                  return (
+                    <div
+                      key={img.src}
+                      className="absolute inset-0 transition-opacity duration-500 ease-in-out"
+                      style={{ opacity: isActive ? 1 : 0 }}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        priority={i === 0}
+                      />
+                    </div>
+                  );
+                })}
 
-              {/* 4 images đè lên nhau */}
+                {/* Inner dashed border */}
+                <div className="absolute inset-3 rounded-[1.5rem] border border-dashed border-[#BE1A1A]/30 z-20 pointer-events-none" />
+
+                {/* Badge số góc trên */}
+                <div className="absolute top-4 left-4 w-12 h-12 rounded-full bg-[#BE1A1A] text-white font-display font-bold flex items-center justify-center shadow-lg z-30">
+                  {productFeatures[activeIndex]?.no ?? "01"}
+                </div>
+                {/* Badge góc dưới */}
+                <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#F7D87F] text-[#BE1A1A] text-[10px] uppercase tracking-wider font-bold z-30">
+                  Móc khóa nón lá
+                </div>
+              </div>
+            </div>
+
+            {/* ========== CỘT PHẢI — SCROLLABLE CONTENT ========== */}
+            <div className="order-2">
               {productFeatures.map((feature, i) => {
-                const Icon = iconMap[feature.iconKey] ?? Sparkles;
                 const isActive = i === activeIndex;
                 return (
                   <div
                     key={feature.id}
-                    className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 ease-in-out"
-                    style={{ opacity: isActive ? 1 : 0 }}
+                    ref={(el) => { featureRefs.current[i] = el; }}
+                    className="relative"
+                    style={{ minHeight: "50vh", paddingBottom: "4rem" }}
                   >
-                    <Icon className="w-24 h-24 sm:w-32 sm:h-32 text-[#BE1A1A] opacity-90" strokeWidth={1.5} />
-                    <div className="mt-6 text-[#BE1A1A] font-display font-bold text-xl sm:text-2xl text-center px-6">
-                      {feature.title}
+                    {/* Số lớn */}
+                    <div
+                      className={`font-display font-black leading-none mb-4 transition-colors duration-300 ${
+                        isActive ? "text-[#BE1A1A]" : "text-[#BE1A1A]/20"
+                      }`}
+                      style={{ fontSize: "clamp(3rem, 6vw, 5rem)" }}
+                    >
+                      {feature.no}
                     </div>
+
+                    {/* Title pill */}
+                    <div
+                      className={`inline-flex items-center self-start px-4 py-2 rounded-full border-2 font-body font-semibold text-xs sm:text-sm uppercase tracking-[0.12em] mb-5 transition-all duration-300 ${
+                        isActive
+                          ? "bg-[#BE1A1A] text-white border-[#BE1A1A]"
+                          : "bg-white text-[#BE1A1A] border-[#BE1A1A]"
+                      }`}
+                    >
+                      {feature.no} — {feature.title}
+                    </div>
+
+                    {/* Description */}
+                    <p
+                      className={`font-body leading-relaxed text-sm sm:text-base max-w-xl transition-colors duration-300 ${
+                        isActive ? "text-[#2a0a0a]" : "text-[#2a0a0a]/50"
+                      }`}
+                    >
+                      {feature.description}
+                    </p>
+
+                    {/* Divider */}
+                    {i < productFeatures.length - 1 && (
+                      <div className="mt-10 h-px bg-gradient-to-r from-transparent via-[#BE1A1A]/20 to-transparent" />
+                    )}
                   </div>
                 );
               })}
-
-              {/* Badge số góc trên */}
-              <div className="absolute top-4 left-4 w-12 h-12 rounded-full bg-[#BE1A1A] text-white font-display font-bold flex items-center justify-center shadow-lg z-30">
-                {productFeatures[activeIndex].no}
-              </div>
-              {/* Badge góc dưới */}
-              <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#F7D87F] text-[#BE1A1A] text-[10px] uppercase tracking-wider font-bold z-30">
-                Ảnh minh họa
-              </div>
             </div>
           </div>
+        </div>
 
-          {/* ========== CỘT PHẢI — SCROLLABLE TEXT ========== */}
-          <div style={{ float: "right", width: "48%", boxSizing: "border-box" }}>
-            {productFeatures.map((feature, i) => {
-              const Icon = iconMap[feature.iconKey] ?? Sparkles;
-              const isActive = i === activeIndex;
-              return (
-                <div
-                  key={feature.id}
-                  ref={(el) => { featureRefs.current[i] = el; }}
-                  className="relative"
-                  style={{ minHeight: "50vh", paddingBottom: "4rem" }}
-                >
-                  {/* Số lớn */}
-                  <div
-                    className={`font-display font-black leading-none mb-4 transition-colors duration-300 ${
-                      isActive ? "text-[#BE1A1A]" : "text-[#BE1A1A]/20"
-                    }`}
-                    style={{ fontSize: "clamp(3rem, 6vw, 5rem)" }}
-                  >
-                    {feature.no}
-                  </div>
-
-                  {/* Title pill */}
-                  <div
-                    className={`inline-flex items-center self-start px-4 py-2 rounded-full border-2 font-body font-semibold text-xs sm:text-sm uppercase tracking-[0.12em] mb-5 transition-all duration-300 ${
-                      isActive
-                        ? "bg-[#BE1A1A] text-white border-[#BE1A1A]"
-                        : "bg-white text-[#BE1A1A] border-[#BE1A1A]"
-                    }`}
-                  >
-                    <Icon className="w-3.5 h-3.5 mr-2 -mt-0.5" />
-                    {feature.no} — {feature.title}
-                  </div>
-
-                  {/* Description */}
-                  <p
-                    className={`font-body leading-relaxed text-sm sm:text-base max-w-xl transition-colors duration-300 ${
-                      isActive ? "text-[#2a0a0a]" : "text-[#2a0a0a]/50"
-                    }`}
-                  >
-                    {feature.description}
-                  </p>
-
-                  {/* Divider */}
-                  {i < productFeatures.length - 1 && (
-                    <div className="mt-10 h-px bg-gradient-to-r from-transparent via-[#BE1A1A]/20 to-transparent" />
-                  )}
+        {/* Mobile: Stack product and features vertically */}
+        {/* This section is hidden on desktop (lg+), visible on mobile */}
+        <div className="lg:hidden relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+            {/* Mobile Product Card */}
+            <div className="mb-12">
+              <div
+                className="relative w-full max-w-sm mx-auto rounded-[2rem] border-[2.5px] border-[#BE1A1A] bg-gradient-to-br from-[#FDF6DC] via-[#F8EBAB] to-[#FDF6DC] shadow-[0_20px_60px_rgba(190,26,26,0.15)] overflow-hidden"
+                style={{ aspectRatio: "1/1" }}
+              >
+                <Image
+                  src={productImages[0].src}
+                  alt={productImages[0].alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+                <div className="absolute inset-3 rounded-[1.5rem] border border-dashed border-[#BE1A1A]/30 z-20 pointer-events-none" />
+                <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#F7D87F] text-[#BE1A1A] text-[10px] uppercase tracking-wider font-bold z-30">
+                  Móc khóa nón lá
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            </div>
 
-          {/* Clear float */}
-          <div style={{ clear: "both" }} />
+            {/* Mobile Features */}
+            {productFeatures.map((feature, i) => (
+              <div
+                key={feature.id}
+                className="mb-10"
+              >
+                <div
+                  className="font-display font-black leading-none mb-4 text-[#BE1A1A]"
+                  style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
+                >
+                  {feature.no}
+                </div>
+                <div className="inline-flex items-center px-4 py-2 rounded-full border-2 bg-[#BE1A1A] text-white border-[#BE1A1A] font-body font-semibold text-xs uppercase tracking-[0.12em] mb-4">
+                  {feature.no} — {feature.title}
+                </div>
+                <p className="font-body leading-relaxed text-sm text-[#2a0a0a] max-w-xl">
+                  {feature.description}
+                </p>
+                {i < productFeatures.length - 1 && (
+                  <div className="mt-8 h-px bg-gradient-to-r from-transparent via-[#BE1A1A]/20 to-transparent" />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
