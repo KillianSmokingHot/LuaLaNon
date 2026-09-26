@@ -38,7 +38,7 @@ export default function Footer() {
             <Link href="#ve-chung-toi" className="flex items-center gap-3 mb-4">
               <div className="h-12 w-12 overflow-hidden rounded-lg bg-[#FDF6DC] flex items-center justify-center border border-[#F7D87F]">
                 <Image
-                  src="/images/LOGO.jpg"
+                  src="/images/logo.jpg"
                   alt="Lụa Là Nón Logo"
                   width={44}
                   height={44}

@@ -10,14 +10,14 @@ import { productFeatures } from "@/data/content";
    All 8 available mockups for the marquee gallery
    ============================================================ */
 const productMockups = [
-  { src: "/images/products/showcase-1.png", alt: "Móc khóa nón lá lụa" },
-  { src: "/images/products/showcase-2.png", alt: "Móc khóa nón lá cá nhân hóa" },
-  { src: "/images/products/momo.png", alt: "MoMo móc khóa" },
-  { src: "/images/products/acb.png", alt: "ACB móc khóa" },
-  { src: "/images/products/shopee.png", alt: "Shopee móc khóa" },
-  { src: "/images/products/tpbank.png", alt: "TPBank móc khóa" },
-  { src: "/images/products/vinamilk.png", alt: "Vinamilk móc khóa" },
-  { src: "/images/products/coffee-house.png", alt: "The Coffee House móc khóa" },
+  { src: "/images/products/momo.png", alt: "MoMo mockup" },
+  { src: "/images/products/acb.png", alt: "ACB mockup" },
+  { src: "/images/products/shopee.png", alt: "Shopee mockup" },
+  { src: "/images/products/tpbank.png", alt: "TPBank mockup" },
+  { src: "/images/products/vinamilk.png", alt: "Vinamilk mockup" },
+  { src: "/images/products/coffee-house.png", alt: "The Coffee House mockup" },
+  { src: "/images/products/van-lang.png", alt: "Van Lang mockup" },
+  { src: "/images/products/be.jpg", alt: "be mockup" },
 ];
 
 /* ============================================================
@@ -112,7 +112,7 @@ export default function ProductShowcase() {
                 {[...productMockups, ...productMockups].map((mockup, i) => (
                   <div
                     key={i}
-                    className="flex-shrink-0 w-[260px] sm:w-[300px] lg:w-[320px] rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.35)] bg-gradient-to-br from-[#FDF6DC] to-[#F8EBAB]"
+                    className="relative flex-shrink-0 w-[260px] sm:w-[300px] lg:w-[320px] rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.35)] bg-gradient-to-br from-[#FDF6DC] to-[#F8EBAB]"
                     style={{ aspectRatio: "3/4" }}
                   >
                     <Image
