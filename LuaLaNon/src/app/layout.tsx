@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Playfair_Display, Montserrat } from "next/font/google";
 import "./globals.css";
 
@@ -43,7 +44,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" className={`${playfair.variable} ${montserrat.variable}`}>
-      <body className="antialiased overflow-x-hidden font-body">{children}</body>
+      <body className="antialiased overflow-x-hidden font-body">{children}        <Script
+          id="cloudflare-web-analytics"
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token":"8d7a37053ac542a6bf6b541449ea75e8"}'
+          strategy="afterInteractive"
+        />
+      </body>
     </html>
   );
 }

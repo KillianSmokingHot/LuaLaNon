@@ -3,11 +3,10 @@
 import { motion } from "framer-motion";
 import { Check, Star, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { pricingTiers, pricingIncluded, pricingExtra } from "@/data/content";
-import { useHorizontalScroll, useScrollY } from "@/lib/hooks";
+import { useHorizontalScroll } from "@/lib/hooks";
 
 export default function Pricing() {
   const { ref, scroll } = useHorizontalScroll<HTMLDivElement>();
-  const scrollY = useScrollY();
 
   return (
     <section id="bang-gia" className="relative py-20 sm:py-28 overflow-x-hidden" style={{ backgroundColor: "#F8EBAB" }}>
@@ -73,61 +72,64 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08, duration: 0.5 }}
-              className={`relative flex-shrink-0 w-[280px] sm:w-[300px] rounded-3xl p-7 sm:p-8 text-center border-[2.5px] transition-all duration-300 ${
+              className={`relative flex-shrink-0 w-[280px] sm:w-[300px] rounded-3xl text-center border-[2.5px] transition-all duration-300 ${
                 tier.highlight
                   ? "bg-[#BE1A1A] text-white border-[#F7D87F] scale-[1.03] shadow-[0_20px_50px_rgba(190,26,26,0.3)]"
                   : "bg-white text-[#2a0a0a] border-[#BE1A1A] hover:shadow-xl"
               }`}
             >
-              {tier.highlight && (
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-[#F7D87F] text-[#BE1A1A] text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1 shadow-lg whitespace-nowrap border-2 border-[#BE1A1A] z-20">
-                  <Star className="w-3.5 h-3.5" fill="#BE1A1A" />
-                  {tier.badge}
-                </div>
-              )}
+              {/* Badge wrapper: reserves vertical space above the card */}
+              <div className="relative pt-7 pb-2">
+                {tier.highlight && (
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-[#F7D87F] text-[#BE1A1A] text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1 shadow-lg whitespace-nowrap border-2 border-[#BE1A1A] z-20">
+                    <Star className="w-3.5 h-3.5" fill="#BE1A1A" />
+                    {tier.badge}
+                  </div>
+                )}
 
-              {/* Quantity */}
-              <p
-                className={`text-xs sm:text-sm font-body font-semibold uppercase tracking-wider mb-6 mt-2 ${
-                  tier.highlight ? "text-[#F7D87F]" : "text-[#BE1A1A]/70"
-                }`}
-              >
-                {tier.quantity}
-              </p>
-
-              {/* Price */}
-              <div className="mb-3">
+                {/* Quantity */}
                 <p
-                  className={`font-display italic font-black leading-none ${
-                    tier.highlight ? "text-[#F7D87F]" : "text-[#BE1A1A]"
+                  className={`text-xs sm:text-sm font-body font-semibold uppercase tracking-wider mb-6 mt-2 ${
+                    tier.highlight ? "text-[#F7D87F]" : "text-[#BE1A1A]/70"
                   }`}
-                  style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)" }}
                 >
-                  {tier.price.replace("/chiếc", "")}
+                  {tier.quantity}
                 </p>
+
+                {/* Price */}
+                <div className="mb-3">
+                  <p
+                    className={`font-display italic font-black leading-none ${
+                      tier.highlight ? "text-[#F7D87F]" : "text-[#BE1A1A]"
+                    }`}
+                    style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)" }}
+                  >
+                    {tier.price.replace("/chiếc", "")}
+                  </p>
+                  <p
+                    className={`text-xs uppercase tracking-[0.2em] mt-2 font-body ${
+                      tier.highlight ? "text-[#F7D87F]/80" : "text-[#BE1A1A]/60"
+                    }`}
+                  >
+                    / chiếc
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div
+                  className={`my-5 border-t ${
+                    tier.highlight ? "border-[#F7D87F]/30" : "border-[#BE1A1A]/15"
+                  }`}
+                />
+
                 <p
-                  className={`text-xs uppercase tracking-[0.2em] mt-2 font-body ${
-                    tier.highlight ? "text-[#F7D87F]/80" : "text-[#BE1A1A]/60"
+                  className={`text-xs font-body ${
+                    tier.highlight ? "text-white/80" : "text-[#2a0a0a]/70"
                   }`}
                 >
-                  / chiếc
+                  Giá đã bao gồm UV DTF cơ bản
                 </p>
               </div>
-
-              {/* Divider */}
-              <div
-                className={`my-5 border-t ${
-                  tier.highlight ? "border-[#F7D87F]/30" : "border-[#BE1A1A]/15"
-                }`}
-              />
-
-              <p
-                className={`text-xs font-body ${
-                  tier.highlight ? "text-white/80" : "text-[#2a0a0a]/70"
-                }`}
-              >
-                Giá đã bao gồm UV DTF cơ bản
-              </p>
             </motion.div>
           ))}
         </div>

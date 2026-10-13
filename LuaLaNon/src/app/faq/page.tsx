@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -47,12 +48,12 @@ export default function FAQPage() {
               >
                 📞 Gọi ngay
               </a>
-              <a
+              <Link
                 href="/#final-cta"
                 className="inline-flex items-center justify-center gap-2 bg-brand-gold text-brand-dark px-6 py-3 rounded-lg font-medium hover:bg-yellow-200 transition-colors"
               >
                 💬 Gửi yêu cầu
-              </a>
+              </Link>
             </div>
           </div>
         </div>
