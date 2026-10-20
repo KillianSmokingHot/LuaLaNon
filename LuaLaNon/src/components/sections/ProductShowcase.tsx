@@ -87,19 +87,16 @@ export default function ProductShowcase() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-white font-body font-bold uppercase tracking-[0.25em] text-xs sm:text-sm mb-3">
+            <p className="text-white font-body uppercase tracking-[0.25em] text-xs sm:text-sm mb-3">
               01/ Về sản phẩm
             </p>
-            <h2 className="font-display italic text-[#F7D87F] text-4xl sm:text-5xl md:text-6xl leading-none">
+            <h2 className="font-display italic font-bold text-[#F7D87F] text-4xl sm:text-5xl md:text-6xl leading-none">
               Móc khóa nón lá lụa
             </h2>
           </motion.div>
 
           {/* Large Moving Mockup Gallery */}
           <div className="mt-8 sm:mt-10 overflow-hidden">
-            <p className="text-white/70 font-body text-sm mb-6 text-center">
-              Một số mẫu cá nhân hóa minh họa
-            </p>
             {/* Marquee container - no overflow on container, inner element scrolls */}
             <div className="relative">
               <div

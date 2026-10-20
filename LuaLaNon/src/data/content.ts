@@ -35,6 +35,7 @@ export const navigation = {
     { label: "SẢN PHẨM", href: "#san-pham" },
   ],
   right: [
+    { label: "MOCK UP", href: "#mock-up" },
     { label: "QUY TRÌNH", href: "#quy-trinh" },
     { label: "BẢNG GIÁ", href: "#bang-gia" },
   ],
@@ -194,12 +195,35 @@ export const processSteps = [
   },
 ];
 
-// --- BẢNG GIÁ (theo mockup) ---
+// --- BẢNG GIÁ (ma trận: Số lượng × Logo) ---
+// Lưu ý: ma trận giá chi tiết được tính trong component Pricing.tsx
+// Dữ liệu dưới đây dùng cho các chỗ khác nếu cần fallback
 export const pricingTiers = [
-  { quantity: "Khi đặt từ 01 – 09 nón:", price: "30.000đ/chiếc", highlight: false },
-  { quantity: "Khi đặt từ 10 – 49 nón:", price: "27.000đ/chiếc", highlight: true, badge: "PHỔ BIẾN" },
-  { quantity: "Khi đặt từ 50 – 99 nón:", price: "24.000đ/chiếc", highlight: false },
-  { quantity: "Khi đặt từ 100+ nón:", price: "20.000đ/chiếc", highlight: false },
+  {
+    quantity: "1–9 chiếc",
+    priceNoLogo: "28.000đ/chiếc",
+    priceWithLogo: "33.000đ/chiếc",
+    highlight: false,
+  },
+  {
+    quantity: "10–49 chiếc",
+    priceNoLogo: "26.000đ/chiếc",
+    priceWithLogo: "31.000đ/chiếc",
+    highlight: true,
+    badge: "PHỔ BIẾN",
+  },
+  {
+    quantity: "50–99 chiếc",
+    priceNoLogo: "24.500đ/chiếc",
+    priceWithLogo: "29.500đ/chiếc",
+    highlight: false,
+  },
+  {
+    quantity: "100+ chiếc",
+    priceNoLogo: "Liên hệ",
+    priceWithLogo: "Liên hệ",
+    highlight: false,
+  },
 ];
 
 export const pricingIncluded = [
@@ -242,6 +266,7 @@ export const footerConfig = {
   quickLinks: [
     { label: "Về chúng tôi", href: "#ve-chung-toi" },
     { label: "Sản phẩm", href: "#san-pham" },
+    { label: "Mock Up", href: "#mock-up" },
     { label: "Quy trình", href: "#quy-trinh" },
     { label: "Bảng giá", href: "#bang-gia" },
     { label: "Tìm Lụa qua đâu?", href: "#lien-he" },

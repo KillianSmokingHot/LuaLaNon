@@ -12,6 +12,7 @@ const sectionIds = [
   "ve-chung-toi",
   "san-pham",
   "tao-dau-an",
+  "mock-up",
   "quy-trinh",
   "bang-gia",
   "lien-he",
@@ -77,9 +78,10 @@ export default function Header() {
             />
           </Link>
 
-          {/* Menu phải: QUY TRÌNH + BẢNG GIÁ */}
+          {/* Menu phải: MOCK UP + QUY TRÌNH + BẢNG GIÁ */}
           <NavLinkItem item={navigation.right[0]} active={activeId === navigation.right[0].href.slice(1)} />
           <NavLinkItem item={navigation.right[1]} active={activeId === navigation.right[1].href.slice(1)} />
+          <NavLinkItem item={navigation.right[2]} active={activeId === navigation.right[2].href.slice(1)} />
         </div>
 
         {/* ===== CTA — góc phải tuyệt đối ===== */}
