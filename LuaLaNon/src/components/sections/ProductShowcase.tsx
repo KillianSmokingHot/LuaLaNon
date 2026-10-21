@@ -24,8 +24,10 @@ const productMockups = [
    STICKY PRODUCT IMAGES — for detail section below
    ============================================================ */
 const productImages = [
-  { src: "/images/products/showcase-1.png", alt: "Móc khóa nón lá lụa" },
-  { src: "/images/products/showcase-2.png", alt: "Móc khóa nón lá cá nhân hóa" },
+  { src: "/images/section-1-tabs/01-chat-lieu.jpg", alt: "Red silk conical hat keychain - material and quality" },
+  { src: "/images/section-1-tabs/02-ca-nhan-hoa.jpg", alt: "Purple silk conical hat keychains - personalization" },
+  { src: "/images/section-1-tabs/03-ung-dung.jpg", alt: "Red silk conical hat keychain on a black bag" },
+  { src: "/images/section-1-tabs/04-phong-cach.jpg", alt: "Pink silk conical hat keychain lifestyle photo" },
 ];
 
 /* ============================================================
@@ -58,6 +60,10 @@ export default function ProductShowcase() {
 
     return () => observer.disconnect();
   }, []);
+
+  const activeProductImage = productImages[
+    Math.min(activeIndex, productImages.length - 1)
+  ] ?? productImages[0];
 
   return (
     <section id="san-pham" className="relative">
@@ -145,7 +151,7 @@ export default function ProductShowcase() {
         />
 
         {/* Sticky 2-column container */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <div className="relative z-10 hidden max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:block">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
 
             {/* ========== CỘT TRÁI — STICKY PRODUCT VISUAL ========== */}
@@ -158,46 +164,35 @@ export default function ProductShowcase() {
               - NO transforms on parent containers
             */}
             <div className="lg:sticky lg:top-24 lg:self-start order-1">
-              <div
-                className="relative w-full rounded-[2rem] border-[2.5px] border-[#BE1A1A] bg-gradient-to-br from-[#FDF6DC] via-[#F8EBAB] to-[#FDF6DC] shadow-[0_20px_60px_rgba(190,26,26,0.15)] overflow-hidden"
-                style={{ aspectRatio: "1/1" }}
-              >
-                {/* Product images layered */}
-                {productImages.map((img, i) => {
-                  const isActive = i === activeIndex || (activeIndex === 0 && i === 0) || (activeIndex >= 2 && i === 1);
-                  return (
-                    <div
-                      key={img.src}
-                      className="absolute inset-0 transition-opacity duration-500 ease-in-out"
-                      style={{ opacity: isActive ? 1 : 0 }}
-                    >
-                      <Image
-                        src={img.src}
-                        alt={img.alt}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={i === 0}
-                      />
-                    </div>
-                  );
-                })}
+  <div className="relative mx-auto w-full max-w-[440px] rounded-[2rem] border-[2.5px] border-[#BE1A1A] bg-white p-3 sm:p-4 shadow-[0_20px_60px_rgba(190,26,26,0.15)]">
+    <motion.div
+      key={activeProductImage.src}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.35 }}
+    >
+      <Image
+        src={activeProductImage.src}
+        alt={activeProductImage.alt}
+        width={928}
+        height={1600}
+        className="block h-auto w-full rounded-[1.25rem] object-contain"
+        sizes="(max-width: 1024px) 100vw, 440px"
+        priority={activeIndex === 0}
+      />
+    </motion.div>
 
-                {/* Inner dashed border */}
-                <div className="absolute inset-3 rounded-[1.5rem] border border-dashed border-[#BE1A1A]/30 z-20 pointer-events-none" />
+    <div className="pointer-events-none absolute inset-3 rounded-[1.5rem] border border-dashed border-[#BE1A1A]/30 sm:inset-4" />
 
-                {/* Badge số góc trên */}
-                <div className="absolute top-4 left-4 w-12 h-12 rounded-full bg-[#BE1A1A] text-white font-display font-bold flex items-center justify-center shadow-lg z-30">
-                  {productFeatures[activeIndex]?.no ?? "01"}
-                </div>
-                {/* Badge góc dưới */}
-                <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#F7D87F] text-[#BE1A1A] text-[10px] uppercase tracking-wider font-bold z-30">
-                  Móc khóa nón lá
-                </div>
-              </div>
-            </div>
+    <div className="absolute left-5 top-5 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#BE1A1A] font-display font-bold text-white shadow-lg">
+      {productFeatures[activeIndex]?.no ?? "01"}
+    </div>
 
-            {/* ========== CỘT PHẢI — SCROLLABLE CONTENT ========== */}
+    <div className="absolute bottom-5 right-5 z-30 rounded-full bg-[#F7D87F] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#BE1A1A]">
+      {"M\u00f3c kh\u00f3a n\u00f3n l\u00e1"}
+    </div>
+  </div>
+</div>
             <div className="order-2">
               {productFeatures.map((feature, i) => {
                 const isActive = i === activeIndex;
@@ -249,54 +244,54 @@ export default function ProductShowcase() {
           </div>
         </div>
 
-        {/* Mobile: Stack product and features vertically */}
-        {/* This section is hidden on desktop (lg+), visible on mobile */}
+        {/* Mobile: each feature has its matching uncropped image */}
         <div className="lg:hidden relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-            {/* Mobile Product Card */}
-            <div className="mb-12">
-              <div
-                className="relative w-full max-w-sm mx-auto rounded-[2rem] border-[2.5px] border-[#BE1A1A] bg-gradient-to-br from-[#FDF6DC] via-[#F8EBAB] to-[#FDF6DC] shadow-[0_20px_60px_rgba(190,26,26,0.15)] overflow-hidden"
-                style={{ aspectRatio: "1/1" }}
-              >
-                <Image
-                  src={productImages[0].src}
-                  alt={productImages[0].alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-                <div className="absolute inset-3 rounded-[1.5rem] border border-dashed border-[#BE1A1A]/30 z-20 pointer-events-none" />
-                <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#F7D87F] text-[#BE1A1A] text-[10px] uppercase tracking-wider font-bold z-30">
-                  Móc khóa nón lá
-                </div>
-              </div>
-            </div>
+            {productFeatures.map((feature, i) => {
+              const image = productImages[i] ?? productImages[0];
 
-            {/* Mobile Features */}
-            {productFeatures.map((feature, i) => (
-              <div
-                key={feature.id}
-                className="mb-10"
-              >
-                <div
-                  className="font-display font-black leading-none mb-4 text-[#BE1A1A]"
-                  style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
-                >
-                  {feature.no}
+              return (
+                <div key={feature.id} className="mb-12">
+                  <div className="relative mx-auto mb-6 w-full max-w-[360px] rounded-[2rem] border-[2.5px] border-[#BE1A1A] bg-white p-3 shadow-[0_20px_60px_rgba(190,26,26,0.15)]">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={928}
+                      height={1600}
+                      className="block h-auto w-full rounded-[1.25rem] object-contain"
+                      sizes="(max-width: 640px) 100vw, 360px"
+                      priority={i === 0}
+                    />
+
+                    <div className="pointer-events-none absolute inset-3 rounded-[1.5rem] border border-dashed border-[#BE1A1A]/30" />
+
+                    <div className="absolute left-5 top-5 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-[#BE1A1A] font-display font-bold text-white shadow-lg">
+                      {feature.no}
+                    </div>
+
+                    <div className="absolute bottom-5 right-5 z-30 rounded-full bg-[#F7D87F] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#BE1A1A]">
+                      {"M\u00f3c kh\u00f3a n\u00f3n l\u00e1"}
+                    </div>
+                  </div>
+
+                  <div className="font-display font-black leading-none mb-4 text-[#BE1A1A]" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
+                    {feature.no}
+                  </div>
+
+                  <div className="inline-flex items-center px-4 py-2 rounded-full border-2 bg-[#BE1A1A] text-white border-[#BE1A1A] font-body font-semibold text-xs uppercase tracking-[0.12em] mb-4">
+                    {feature.no} {"\u2014"} {feature.title}
+                  </div>
+
+                  <p className="font-body leading-relaxed text-sm text-[#2a0a0a] max-w-xl">
+                    {feature.description}
+                  </p>
+
+                  {i < productFeatures.length - 1 && (
+                    <div className="mt-8 h-px bg-gradient-to-r from-transparent via-[#BE1A1A]/20 to-transparent" />
+                  )}
                 </div>
-                <div className="inline-flex items-center px-4 py-2 rounded-full border-2 bg-[#BE1A1A] text-white border-[#BE1A1A] font-body font-semibold text-xs uppercase tracking-[0.12em] mb-4">
-                  {feature.no} — {feature.title}
-                </div>
-                <p className="font-body leading-relaxed text-sm text-[#2a0a0a] max-w-xl">
-                  {feature.description}
-                </p>
-                {i < productFeatures.length - 1 && (
-                  <div className="mt-8 h-px bg-gradient-to-r from-transparent via-[#BE1A1A]/20 to-transparent" />
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

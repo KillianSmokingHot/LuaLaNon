@@ -11,11 +11,11 @@ import { useCases } from "@/data/content";
    ============================================================ */
 const useCaseImages = {
   individual: {
-    src: "/images/products/showcase-1.png",
+    src: "/images/use-cases/individual-lifestyle.png",
     alt: "Móc khóa nón lá lụa cá nhân",
   },
   organization: {
-    src: "/images/products/showcase-2.png",
+    src: "/images/use-cases/organization-gifting.png",
     alt: "Móc khóa nón lá lụa doanh nghiệp",
   },
 };
@@ -65,7 +65,7 @@ export default function UseCases() {
                 src={useCaseImages.individual.src}
                 alt={useCaseImages.individual.alt}
                 fill
-                className="object-contain"
+                className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="absolute inset-3 rounded-xl border border-dashed border-[#BE1A1A]/30" />
@@ -125,7 +125,7 @@ export default function UseCases() {
                 src={useCaseImages.organization.src}
                 alt={useCaseImages.organization.alt}
                 fill
-                className="object-contain"
+                className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="absolute inset-3 rounded-xl border border-dashed border-[#F7D87F]/30" />

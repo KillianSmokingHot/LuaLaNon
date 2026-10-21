@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { motion } from "framer-motion";
 import { Upload, X, Move3D } from "lucide-react";
 
@@ -48,18 +49,72 @@ export default function MockUpSection() {
   const [translateY, setTranslateY] = useState(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logoObjectUrlRef = useRef<string | null>(null);
+  const [logoDimensions, setLogoDimensions] = useState({ width: 1, height: 1 });
+
+  // Revoke temporary upload URLs when the component unmounts.
+  useEffect(() => {
+    return () => {
+      if (logoObjectUrlRef.current) {
+        URL.revokeObjectURL(logoObjectUrlRef.current);
+      }
+    };
+  }, []);
 
   // ---- Handlers ----
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setLogoImage(url);
+    if (!file) return;
+
+    if (logoObjectUrlRef.current) {
+      URL.revokeObjectURL(logoObjectUrlRef.current);
+      logoObjectUrlRef.current = null;
     }
+
+    const url = URL.createObjectURL(file);
+    logoObjectUrlRef.current = url;
+    setLogoImage(null);
+    const probe = new window.Image();
+
+    probe.onload = () => {
+      // Ignore stale loads if the user selected another file in the meantime.
+      if (logoObjectUrlRef.current !== url) return;
+
+      setLogoDimensions({
+        width: probe.naturalWidth || 1,
+        height: probe.naturalHeight || 1,
+      });
+      setLogoImage(url);
+      // Start each newly uploaded logo centered and at a predictable size.
+      setScale(100);
+      setRotate(0);
+      setTranslateX(0);
+      setTranslateY(0);
+    };
+
+    probe.onerror = () => {
+      URL.revokeObjectURL(url);
+      if (logoObjectUrlRef.current === url) {
+        logoObjectUrlRef.current = null;
+        setLogoImage(null);
+      }
+      e.target.value = "";
+    };
+
+    probe.src = url;
   };
 
   const handleRemoveLogo = () => {
+    if (logoObjectUrlRef.current) {
+      URL.revokeObjectURL(logoObjectUrlRef.current);
+      logoObjectUrlRef.current = null;
+    }
     setLogoImage(null);
+    setLogoDimensions({ width: 1, height: 1 });
+    setScale(100);
+    setRotate(0);
+    setTranslateX(0);
+    setTranslateY(0);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -69,26 +124,88 @@ export default function MockUpSection() {
     setSelectedColor(color);
   };
 
-  // Calculate logo transform
-  const logoTransform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px)) rotate(${rotate}deg) scale(${scale / 100})`;
+  // All logo files use their natural aspect ratio; the longest side is normalized
+  // to the selected scale so wide/tall uploads behave consistently.
+  const logoAspect = logoDimensions.width / Math.max(logoDimensions.height, 1);
+  const logoSize = 260 * (scale / 100);
+  const logoWidth = logoAspect >= 1 ? logoSize : logoSize * logoAspect;
+  const logoHeight = logoAspect >= 1 ? logoSize / logoAspect : logoSize;
 
+  // Coordinates are normalized to the 1000 x 1000 product-image viewBox.
+  // The clip path follows the fabric face just inside the bamboo rim.
+  const logoCenterX = 488 + translateX * 2;
+  const logoCenterY = 600 + translateY * 2;
+
+  const logoDragRef = useRef<{
+    pointerId: number;
+    startClientX: number;
+    startClientY: number;
+    startX: number;
+    startY: number;
+    width: number;
+    height: number;
+  } | null>(null);
+
+  const handleLogoPointerDown = (event: ReactPointerEvent<SVGImageElement>) => {
+    const svg = event.currentTarget.ownerSVGElement;
+    if (!svg) return;
+
+    event.preventDefault();
+
+    const rect = svg.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    logoDragRef.current = {
+      pointerId: event.pointerId,
+      startClientX: event.clientX,
+      startClientY: event.clientY,
+      startX: translateX,
+      startY: translateY,
+      width: rect.width,
+      height: rect.height,
+    };
+
+    svg.setPointerCapture(event.pointerId);
+  };
+
+  const handleLogoPointerMove = (event: ReactPointerEvent<SVGSVGElement>) => {
+    const drag = logoDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    const dx = ((event.clientX - drag.startClientX) / drag.width) * 1000 / 2;
+    const dy = ((event.clientY - drag.startClientY) / drag.height) * 1000 / 2;
+
+    setTranslateX(Math.max(-150, Math.min(150, Math.round(drag.startX + dx))));
+    setTranslateY(Math.max(-150, Math.min(150, Math.round(drag.startY + dy))));
+  };
+
+  const handleLogoPointerEnd = (event: ReactPointerEvent<SVGSVGElement>) => {
+    if (logoDragRef.current?.pointerId !== event.pointerId) return;
+
+    logoDragRef.current = null;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
   return (
     <section
       id="mock-up"
       className="relative py-20 sm:py-28 overflow-hidden"
       style={{ backgroundColor: "#c1121f" }}
     >
-      {/* Polka dot pattern - giảm opacity xuống 0.05 */}
+      {/* Warm gold polka dots with enough contrast to remain visible on red. */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: "radial-gradient(circle, #f6df96 1.5px, transparent 1.5px)",
-          backgroundSize: "28px 28px",
-          opacity: 0.05,
+          backgroundImage: "radial-gradient(circle, #f6df96 2px, transparent 2px)",
+          backgroundSize: "30px 30px",
+          opacity: 0.28,
         }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -114,10 +231,10 @@ export default function MockUpSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-start"
+          className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.55fr)_minmax(360px,1fr)] gap-6 lg:gap-8 items-start"
         >
           {/* ----- CỘT TRÁI: PREVIEW (60%) ----- */}
-          <div className="lg:col-span-3">
+          <div className="min-w-0">
             <div
               className="relative rounded-3xl overflow-hidden"
               style={{
@@ -125,78 +242,97 @@ export default function MockUpSection() {
                 boxShadow: "0 20px 60px rgba(0,0,0,0.08)",
                 aspectRatio: "1 / 1",
               }}
+            >        {/* Product image and logo share the same enlarged SVG coordinate space. */}
+        <div className="absolute inset-0 flex items-center justify-center p-5 sm:p-7">
+          <div
+            className="relative flex h-full w-full items-center justify-center"
+            style={{ transform: "scale(1.15)", transformOrigin: "center center" }}
+          >
+            <img
+              key={selectedColor.id}
+              src={selectedColor.image}
+              alt={"Mock up màu " + selectedColor.name}
+              className="absolute inset-0 h-full w-full object-contain transition-all duration-300"
+              draggable={false}
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                target.style.display = "none";
+
+                const fallback = document.createElement("div");
+                fallback.style.cssText = `
+                  width: 70%;
+                  height: 70%;
+                  border-radius: 50%;
+                  background-color: ${selectedColor.hexCode};
+                  box-shadow: inset 0 -20px 40px rgba(0,0,0,0.15), 0 10px 30px rgba(0,0,0,0.1);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: ${isLightColor(selectedColor.hexCode) ? "#BE1A1A" : "#FFFFFF"};
+                  font-family: 'Playfair Display', serif;
+                  font-size: 24px;
+                  font-weight: bold;
+                `;
+                fallback.textContent = selectedColor.name;
+                target.parentElement?.appendChild(fallback);
+              }}
+            />
+
+            <svg
+              viewBox="0 0 1000 1000"
+              preserveAspectRatio="none"
+              className="absolute inset-0 h-full w-full"
+              style={{
+                overflow: "hidden",
+                touchAction: "none",
+                pointerEvents: logoImage ? "auto" : "none",
+              }}
+              onPointerMove={handleLogoPointerMove}
+              onPointerUp={handleLogoPointerEnd}
+              onPointerCancel={handleLogoPointerEnd}
             >
-              {/* Ảnh mock up nón lá */}
-              <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-8">
-                <img
-                  key={selectedColor.id}
-                  src={selectedColor.image}
-                  alt={`Mock up màu ${selectedColor.name}`}
-                  className="max-w-full max-h-full object-contain transition-all duration-300"
-                  onError={(e) => {
-                    const target = e.currentTarget as HTMLImageElement;
-                    target.style.display = "none";
-                    const fallback = document.createElement("div");
-                    fallback.style.cssText = `
-                      width: 70%;
-                      height: 70%;
-                      border-radius: 50%;
-                      background-color: ${selectedColor.hexCode};
-                      box-shadow: inset 0 -20px 40px rgba(0,0,0,0.15), 0 10px 30px rgba(0,0,0,0.1);
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      color: ${isLightColor(selectedColor.hexCode) ? "#BE1A1A" : "#FFFFFF"};
-                      font-family: 'Playfair Display', serif;
-                      font-size: 24px;
-                      font-weight: bold;
-                    `;
-                    fallback.textContent = selectedColor.name;
-                    target.parentElement?.appendChild(fallback);
-                  }}
-                />
-              </div>
+              <defs>
+                <clipPath id="mockup-hat-face-clip" clipPathUnits="userSpaceOnUse">
+                  <path d="M 488 315 C 610 315 707 390 752 485 C 786 554 790 633 772 701 C 745 805 647 877 488 882 C 359 880 257 817 216 724 C 188 658 190 575 218 505 C 260 411 369 315 488 315 Z" />
+                </clipPath>
+              </defs>
 
-              {/* Logo overlay */}
               {logoImage && (
-                <div
-                  className="absolute pointer-events-none"
-                  style={{
-                    top: "50%",
-                    left: "50%",
-                    transform: logoTransform,
-                    width: "150px",
-                    height: "150px",
-                  }}
-                >
-                  <img
-                    src={logoImage}
-                    alt="Logo của bạn"
-                    className="w-full h-full object-contain"
-                    style={{ filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.3))" }}
+                <g clipPath="url(#mockup-hat-face-clip)">
+                  <image
+                    href={logoImage}
+                    x={logoCenterX - logoWidth / 2}
+                    y={logoCenterY - logoHeight / 2}
+                    width={logoWidth}
+                    height={logoHeight}
+                    preserveAspectRatio="none"
+                    transform={"rotate(" + rotate + " " + logoCenterX + " " + logoCenterY + ")"}
+                    onPointerDown={handleLogoPointerDown}
+                    style={{
+                      cursor: "grab",
+                      touchAction: "none",
+                      pointerEvents: "all",
+                      filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.3))",
+                    }}
                   />
-                </div>
+                </g>
               )}
+            </svg>
+          </div>
+        </div>
 
-              {/* Badge màu đang chọn */}
-              <div
-                className="absolute top-4 left-4 px-4 py-2 rounded-full text-white text-sm font-body font-semibold shadow-lg"
-                style={{ backgroundColor: "#BE1A1A" }}
-              >
-                {selectedColor.name}
-              </div>
-
-              {/* Placeholder hint khi chưa có logo */}
-              {!logoImage && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-black/60 text-white text-xs font-body">
-                  Logo sẽ hiển thị ở đây
-                </div>
-              )}
+        {/* Fixed guidance label replaces the selected-color badge. */}
+        <div
+          className="absolute left-4 top-4 z-30 rounded-full bg-[#BE1A1A] px-5 py-3 font-body text-xs font-semibold leading-snug text-white shadow-lg sm:left-5 sm:top-5 sm:px-6 sm:py-3.5 sm:text-sm md:text-base"
+          style={{ maxWidth: "calc(100% - 2rem)" }}
+        >
+          Xem bản mock up của bạn ngay tại đây!
+        </div>
             </div>
           </div>
 
           {/* ----- CỘT PHẢI: CONTROLS (40%) ----- */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="min-w-0 space-y-4">
             {/* A. BẢNG MÀU - COLOR CARDS */}
             <div
               className="bg-white/95 backdrop-blur-sm rounded-2xl p-5 border border-white/20"
@@ -347,12 +483,12 @@ export default function MockUpSection() {
                     <label className="text-[#2a0a0a] font-body text-sm font-medium">
                       Vị trí ngang
                     </label>
-                    <span className="text-[#BE1A1A] font-body text-sm font-bold">{translateX}px</span>
+                    <span className="text-[#BE1A1A] font-body text-sm font-bold">{translateX}</span>
                   </div>
                   <input
                     type="range"
-                    min={-100}
-                    max={100}
+                    min={-150}
+                    max={150}
                     value={translateX}
                     onChange={(e) => setTranslateX(Number(e.target.value))}
                     className="slider-brand"
@@ -365,12 +501,12 @@ export default function MockUpSection() {
                     <label className="text-[#2a0a0a] font-body text-sm font-medium">
                       Vị trí dọc
                     </label>
-                    <span className="text-[#BE1A1A] font-body text-sm font-bold">{translateY}px</span>
+                    <span className="text-[#BE1A1A] font-body text-sm font-bold">{translateY}</span>
                   </div>
                   <input
                     type="range"
-                    min={-100}
-                    max={100}
+                    min={-150}
+                    max={150}
                     value={translateY}
                     onChange={(e) => setTranslateY(Number(e.target.value))}
                     className="slider-brand"
