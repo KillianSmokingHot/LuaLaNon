@@ -48,7 +48,7 @@ export default function RootLayout({
           id="cloudflare-web-analytics"
           type="module"
           src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon='{"token":"8d7a37053ac542a6bf6b541449ea75e8"}'
+          data-cf-beacon={JSON.stringify({ token: process.env.NEXT_PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN ?? "8d7a37053ac542a6bf6b541449ea75e8" })}
           strategy="afterInteractive"
         />
       </body>
