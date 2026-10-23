@@ -10,7 +10,7 @@ export default function Hero() {
   return (
     <section
       id="ve-chung-toi"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
+      className="relative overflow-hidden bg-white pt-[calc(64px+2.25rem)] pb-12 sm:pt-[calc(64px+3rem)] sm:pb-16 lg:flex lg:min-h-[100svh] lg:items-center lg:justify-center lg:pt-[110px] lg:pb-16"
       style={{ backgroundColor: "#FFFFFF" }}
     >
       {/* Dot pattern */}
@@ -42,7 +42,7 @@ export default function Hero() {
       <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center justify-center text-center">
         {/* Kicker — nhỏ hơn */}
         <motion.p
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-[#BE1A1A] text-[10px] sm:text-xs font-body font-semibold uppercase tracking-[0.4em] mb-0"
@@ -53,7 +53,7 @@ export default function Hero() {
 
         {/* Ảnh typo — nhỏ hơn */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
+          initial={false}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
           className="w-full max-w-[520px] sm:max-w-[680px] lg:max-w-[760px] mt-2 mb-0"
@@ -72,7 +72,7 @@ export default function Hero() {
 
         {/* Tagline — nhỏ hơn */}
         <motion.h1
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35, ease: "easeOut" }}
           className="text-[#BE1A1A] font-display italic font-normal leading-tight mt-2 mb-0"
@@ -83,7 +83,7 @@ export default function Hero() {
 
         {/* Sub — nhỏ hơn */}
         <motion.p
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
           className="text-[#2a0a0a]/70 text-[11px] sm:text-xs md:text-sm font-body font-light leading-relaxed max-w-lg mt-3 mb-0 px-2"
@@ -93,7 +93,7 @@ export default function Hero() {
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.65, ease: "easeOut" }}
           className="mt-5 mb-0"

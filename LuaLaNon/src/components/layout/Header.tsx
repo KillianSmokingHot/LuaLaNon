@@ -32,30 +32,18 @@ export default function Header() {
     <>
       {/* Navbar — mỏng 70px, center-focused */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed inset-x-0 top-0 z-[9999] flex h-16 items-center justify-center bg-[#BE1A1A] px-3 transition-colors duration-300 sm:px-6 lg:h-[70px] xl:px-[30px] ${
           scrolled ? "border-b border-[#F7D87F]/40" : "border-b border-transparent"
         }`}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 9999,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "70px",
-          backgroundColor: "#BE1A1A",
-          padding: "0 30px",
-          boxSizing: "border-box",
-        }}
       >
         {/* ===== HAMBURGER — góc trái tuyệt đối ===== */}
         <button
+          type="button"
           onClick={() => setMobileOpen(true)}
-          className="text-[#F7D87F] hover:text-white transition-colors"
-          style={{ position: "absolute", left: "30px", top: "50%", transform: "translateY(-50%)" }}
+          className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 text-[#F7D87F] transition-colors hover:text-white sm:left-5 xl:left-[30px]"
           aria-label={navigation.hamburgerLabel}
+          aria-expanded={mobileOpen}
+          aria-controls="lln-mobile-navigation"
         >
           <Menu className="w-7 h-7" strokeWidth={2.5} />
         </button>
@@ -73,7 +61,7 @@ export default function Header() {
               alt={brand.name}
               width={100}
               height={100}
-              style={{ height: "50px", width: "auto", transform: "scale(1.3)", objectFit: "contain" }}
+              className="h-10 w-auto object-contain sm:h-11 lg:h-[50px] xl:scale-[1.15]"
               priority
             />
           </Link>
@@ -87,10 +75,10 @@ export default function Header() {
         {/* ===== CTA — góc phải tuyệt đối ===== */}
         <Link
           href={navigation.cta.href}
-          className="cta-pulse-btn"
-          style={{ position: "absolute", right: "30px", top: "50%", transform: "translateY(-50%)" }}
+          className="cta-pulse-btn absolute right-3 top-1/2 sm:right-6 xl:right-[30px]"
         >
-          ĐẶT NÓN NGAY
+          <span className="sm:hidden">ĐẶT NÓN</span>
+          <span className="hidden sm:inline">ĐẶT NÓN NGAY</span>
         </Link>
       </header>
 
@@ -102,7 +90,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 bg-[#BE1A1A] flex flex-col"
+            className="fixed inset-0 z-[10000] flex flex-col overflow-y-auto bg-[#BE1A1A] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
           >
             <div
               className="absolute inset-0 opacity-15 pointer-events-none"
@@ -122,7 +110,7 @@ export default function Header() {
               </button>
             </div>
 
-            <nav className="relative flex-1 px-6 py-8 flex flex-col gap-1 overflow-y-auto">
+            <nav id="lln-mobile-navigation" className="relative flex-1 px-6 py-8 flex flex-col gap-1 overflow-y-auto">
               {[...navigation.left, ...navigation.right].map((item, i) => (
                 <motion.div key={item.href} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05, duration: 0.3 }}>
                   <Link
@@ -154,7 +142,7 @@ export default function Header() {
         .nav-center-cluster {
           display: flex;
           align-items: center;
-          gap: 50px;
+          gap: 0;
         }
 
         /* CTA Pulse */
@@ -176,8 +164,8 @@ export default function Header() {
           color: #BE1A1A;
           font-family: var(--font-body), sans-serif;
           font-weight: 700;
-          font-size: 16px;
-          padding: 12px 28px;
+          font-size: 12px;
+          padding: 10px 14px;
           border-radius: 9999px;
           animation: cta-pulse 2s ease-in-out infinite;
           cursor: pointer;
@@ -189,16 +177,16 @@ export default function Header() {
           animation-play-state: paused;
         }
 
-        /* Responsive: ẩn menu text trên mobile, chỉ hamburger + logo */
-        @media (max-width: 900px) {
-          .nav-center-cluster > a,
-          .nav-center-cluster > div {
-            display: none;
-          }
-          .nav-center-cluster > a:first-child,
-          .nav-center-cluster > a:last-child {
-            display: flex;
-          }
+        /* Mobile: centered brand logo and compact CTA. */
+        @media (min-width: 640px) {
+          .cta-pulse-btn { font-size: 13px; padding: 11px 18px; }
+        }
+        @media (min-width: 1280px) {
+          .nav-center-cluster { gap: 32px; }
+          .cta-pulse-btn { font-size: 16px; padding: 12px 28px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .cta-pulse-btn { animation: none; transform: translateY(-50%); }
         }
       `}</style>
     </>
@@ -209,7 +197,7 @@ function NavLinkItem({ item, active }: { item: { label: string; href: string }; 
   return (
     <Link
       href={item.href}
-      className={`text-[#F7D87F] text-sm font-semibold uppercase tracking-[0.14em] px-3 py-2 rounded-full border transition-all duration-300 ${
+      className={`hidden xl:inline-flex text-[#F7D87F] text-sm font-semibold uppercase tracking-[0.14em] px-3 py-2 rounded-full border transition-all duration-300 ${
         active
           ? "border-[#F7D87F] bg-[#F7D87F]/10 text-white"
           : "border-transparent hover:border-[#F7D87F]/40 hover:text-white"
